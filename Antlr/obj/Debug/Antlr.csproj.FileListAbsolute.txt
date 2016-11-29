@@ -1,0 +1,19 @@
+c:\users\desanad\documents\visual studio 2015\Projects\Antlr\Antlr\bin\Debug\Antlr.exe.config
+c:\users\desanad\documents\visual studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseLexer.cs
+c:\users\desanad\documents\visual studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseParser.cs
+c:\users\desanad\documents\visual studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseListener.cs
+c:\users\desanad\documents\visual studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseBaseListener.cs
+c:\users\desanad\documents\visual studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseVisitor.cs
+c:\users\desanad\documents\visual studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseBaseVisitor.cs
+c:\users\desanad\documents\visual studio 2015\Projects\Antlr\Antlr\obj\Debug\Antlr.csproj.Antlr4GeneratedCodeFileListAbsolute.txt
+C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\bin\Debug\Antlr.exe
+C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\bin\Debug\Antlr.pdb
+C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\bin\Debug\Antlr4.Runtime.dll
+C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\bin\Debug\Antlr4.Runtime.xml
+C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\obj\Debug\Antlr.exe
+C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\obj\Debug\Antlr.pdb
+C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\obj\Debug\Antlr.csprojResolveAssemblyReference.cache
+f:\Diplomka\Diplomka\Antlr\bin\Debug\Antlr.exe.config
+f:\Diplomka\Diplomka\Antlr\obj\Debug\Antlr.exe
+f:\Diplomka\Diplomka\Antlr\obj\Debug\Antlr.pdb
+f:\Diplomka\Diplomka\Antlr\obj\Debug\Antlr.csprojResolveAssemblyReference.cache
