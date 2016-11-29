@@ -20,7 +20,8 @@ cleanInput :
  
 
 number :   ('+' | '-') INT
-	     | ('+' | '-') INT '.' INT; 
+	     | ('+' | '-') INT '.' INT
+; 
 
 
 // right side
@@ -29,7 +30,7 @@ number :   ('+' | '-') INT
 params : 
 		  '(' params ')' 
 	    | METHOD						
-		| '(' METHOD ')' METHOD // '(' METHOD ')' ARGUMENT;
+		| '(' METHOD ')' ARGUMENT // '(' METHOD ')' ARGUMENT;
 ;		  
  
 
@@ -37,13 +38,12 @@ params :
 
 
 logicalExpression :                                        // incomplete
-		  expression ('<' | '>' | '==' | '<=' | '>=' | '!=' | '^') expression
-		| expression ('&&' | '||' | 'or' | 'and' | ) expression
+		  expression LOGICAL_OPERATOR expression
 ;
 
 
-methematicalExpression :                                       // incomplete
-		  expression ('+' | '-' | '*' | '/' | '^') expression                    
+mathematicalExpression :                                       // incomplete
+		  expression MATHEMATICAL_OPERATOR expression                    
 ;
 
 
@@ -74,7 +74,7 @@ lambdaExpression :
 
 expression : 
 		 | logicalExpression
-		 | methematicalExpression
+		 | mathematicalExpression
 		 | conditionExpression
 		 | cycleExpression
 		 | INT
@@ -89,5 +89,8 @@ INT : [0-9]+;
 METHOD : [a-z]+;     
 VARIABLE : [a-z]+;          
 ARGUMENT : [a-z]+;
+
+LOGICAL_OPERATOR: ('&&' | '||' | 'or' | 'and' | '<' | '>' | '==' | '<=' | '>=' | '!=' | '^');
+MATHEMATICAL_OPERATOR: ('+' | '-' | '*' | '/' | '^');
 
 WS  :   (' ' | '\t' | '\r' | '\n') -> skip;
