@@ -1,6 +1,6 @@
-C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseLexer.cs
-C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseParser.cs
-C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseListener.cs
-C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseBaseListener.cs
-C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseVisitor.cs
-C:\Users\DesanaD\Documents\Visual Studio 2015\Projects\Antlr\Antlr\obj\Debug\BaseBaseVisitor.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KLexer.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KParser.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KListener.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KBaseListener.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KVisitor.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KBaseVisitor.cs

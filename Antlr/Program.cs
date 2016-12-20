@@ -1,6 +1,8 @@
 ﻿using System;
 using Antlr4.Runtime;
 using Antlr.Grammars;
+using Antlr4.Runtime.Tree;
+
 
 namespace Antlr
 {
@@ -27,14 +29,15 @@ namespace Antlr
         }
         private void RunParser()
         {
-            AntlrInputStream inputStream = new AntlrInputStream("{% expr | (m) arg %}");
-            BaseLexer baseLexer = new BaseLexer(inputStream);
-            CommonTokenStream commonTokenStream = new CommonTokenStream(baseLexer);
-            BaseParser baseParser = new BaseParser(commonTokenStream);
-            BaseParser.InputContext rContext = baseParser.input();
-            IBaseVisitor<string> visitor = new BaseBaseVisitor<string>();
-            var result = visitor.VisitInput(rContext);
+            AntlrInputStream inputStream = new AntlrInputStream("132 * 111");
+            KLexer lexer = new KLexer(inputStream);
+            CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+            KParser parser = new KParser(commonTokenStream);
+            IParseTree tree = parser.compileUnit();
+            IParseTreeVisitor<object> visitor = new KVisitor();
+            var result = visitor.Visit(tree);
             Console.WriteLine(result);
+            
         }
     }
 }

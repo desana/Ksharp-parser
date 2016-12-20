@@ -51,17 +51,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base.g4.lexer.cs">
-      <DependentUpon>Base.g4</DependentUpon>
+      <DependentUpon>K.g4</DependentUpon>
     </Compile>
     <Compile Include="Base.g4.parser.cs">
-      <DependentUpon>Base.g4</DependentUpon>
+      <DependentUpon>K.g4</DependentUpon>
     </Compile>
+    <Compile Include="KVisitor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Antlr4 Include="Base.g4">
+    <Antlr4 Include="K.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>Antlr.Grammars</CustomToolNamespace>
       <Visitor>True</Visitor>

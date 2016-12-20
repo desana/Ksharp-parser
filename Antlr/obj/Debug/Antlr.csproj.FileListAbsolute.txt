@@ -17,3 +17,14 @@ f:\Diplomka\Diplomka\Antlr\bin\Debug\Antlr.exe.config
 f:\Diplomka\Diplomka\Antlr\obj\Debug\Antlr.exe
 f:\Diplomka\Diplomka\Antlr\obj\Debug\Antlr.pdb
 f:\Diplomka\Diplomka\Antlr\obj\Debug\Antlr.csprojResolveAssemblyReference.cache
+F:\Diplomka\Diplomka\Antlr\obj\Debug\Antlr.csproj.Antlr4GeneratedCodeFileListAbsolute.txt
+F:\Diplomka\Diplomka\Antlr\bin\Debug\Antlr.exe
+F:\Diplomka\Diplomka\Antlr\bin\Debug\Antlr.pdb
+F:\Diplomka\Diplomka\Antlr\bin\Debug\Antlr4.Runtime.dll
+F:\Diplomka\Diplomka\Antlr\bin\Debug\Antlr4.Runtime.xml
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KLexer.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KParser.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KListener.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KBaseListener.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KVisitor.cs
+F:\Diplomka\Diplomka\Antlr\obj\Debug\KBaseVisitor.cs
