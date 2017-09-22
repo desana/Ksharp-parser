@@ -28,6 +28,8 @@ obj/
 [Dd]ebug*/
 [Rr]elease*/
 Ankh.NoLoad
+packages/
+*.g4.cs
 
 #Tooling
 _ReSharper*/
