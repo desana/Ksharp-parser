@@ -50,11 +50,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base.g4.lexer.cs">
-      <DependentUpon>K.g4</DependentUpon>
+    <Compile Include="KLexer.g4.cs">
+      <DependentUpon>KLexer.g4</DependentUpon>
     </Compile>
-    <Compile Include="Base.g4.parser.cs">
-      <DependentUpon>K.g4</DependentUpon>
+    <Compile Include="KParser.g4.cs">
+      <DependentUpon>KParser.g4</DependentUpon>
     </Compile>
     <Compile Include="KVisitor.cs" />
     <Compile Include="Program.cs" />
@@ -62,13 +62,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Antlr4 Include="K.g4">
+    <Antlr4 Include="KParser.g4">
       <Generator>MSBuild:Compile</Generator>
-      <CustomToolNamespace>Antlr.Grammars</CustomToolNamespace>
-      <Visitor>True</Visitor>
-      <ForceAtn>True</ForceAtn>
+      <CustomToolNamespace>Antlr</CustomToolNamespace>
     </Antlr4>
-    <None Include="packages.config" />
+    <Antlr4 Include="KLexer.g4">
+      <Generator>MSBuild:Compile</Generator>
+      <CustomToolNamespace>Antlr</CustomToolNamespace>
+    </Antlr4>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
