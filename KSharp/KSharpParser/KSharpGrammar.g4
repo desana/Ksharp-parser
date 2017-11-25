@@ -1,11 +1,18 @@
 grammar KSharpGrammar;
 
-@using Stack
+options {
+
+	language=CSharp2;
+}
+
+@lexer::namespace{KSharpParser} 
+@parser::namespace{KSharpParser} 
+
 @lexer::members
 {
 private int interpolatedStringLevel;
-private Stack<bool> interpolatedVerbatiums = new Stack<bool>();
-private Stack<int> curlyLevels = new Stack<int>();
+private System.Collections.Generic.Stack<bool> interpolatedVerbatiums = new System.Collections.Generic.Stack<bool>();
+private System.Collections.Generic.Stack<int> curlyLevels = new System.Collections.Generic.Stack<int>();
 private bool verbatium;
 }
 
