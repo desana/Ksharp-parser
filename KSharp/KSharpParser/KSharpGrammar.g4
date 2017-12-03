@@ -48,25 +48,25 @@ assignment
 
 assignment_operator
 	: ASSIGN 
-	| ADD_ASSIGN 
-	| SUBSTRACT_ASSIGN 
-	| MULTIPLY_ASSIGN 
-	| DIVIDE_ASSIGN 
+	| PLUS_ASSIGN 
+	| MINUS_ASSIGN 
+	| MUL_ASSIGN 
+	| DIV_ASSIGN 
 	| MOD_ASSIGN 
-	| AND_ASSIGNMENT
-	| OR_ASSIGNMENT
-	| XOR_ASSIGNMENT
+	| AND_ASSIGN
+	| OR_ASSIGN
+	| XOR_ASSIGN
 	| LEFT_SHIFT
-	| LEFT_SHIFT_ASSIGNMENT
+	| LEFT_SHIFT_ASSIGN
 	| right_shift_assignment
 	;
 
 conditional_expression
-	: null_coalescing_expression (QUESTION_M expression COLON expression)?
+	: null_coalescing_expression (QUESTION_MARK expression COLON expression)?
 	;
 
 null_coalescing_expression
-	: conditional_or_expression (DOUBLE_QUESTION_M null_coalescing_expression)?
+	: conditional_or_expression (DOUBLE_QUESTION_MARK null_coalescing_expression)?
 	;
 
 conditional_or_expression
@@ -119,6 +119,7 @@ unary_expression
 	| DEC unary_expression
 	| AMPERSAND unary_expression
 	| MUL unary_expression
+	| block
 	;
 
 primary_expression  // Null-conditional operators C# 6: https://msdn.microsoft.com/en-us/library/dn986595.aspx
@@ -134,11 +135,11 @@ primary_expression_start
 	;
 
 member_access
-	: QUESTION_M? PERIOD identifier
+	: QUESTION_MARK? PERIOD identifier
 	;
 
 bracket_expression
-	: QUESTION_M? OPEN_BRACKET indexer_argument ( COMMA indexer_argument)* CLOSE_BRACKET
+	: QUESTION_MARK? OPEN_BRACKET indexer_argument ( COMMA indexer_argument)* CLOSE_BRACKET
 	;
 
 indexer_argument
@@ -392,76 +393,86 @@ identifier
 	;
 
  // <--------------------------- LEXER RULES ------------------------------->
-BREAK:         'break';
-CONTINUE:      'continue';
-ELSE:          'else';
-EQUALS:        'equals'; 
-FALSE:         'false';
-FOR:           'for';
-FOREACH:       'foreach';
-IF:            'if'; 
-DO: 'do';
-WHERE:         'where'; 
-RETURN:        'return';
-WHILE:         'while';
-TRUE: 'true';
-NULL: 'null';
-IDENTIFIER:          '@'? IdentifierOrKeyword;
+ // <------- KEYWORDS ------->
 
-HEX_INTEGER_LITERAL: [0-9]; 
-CHARACTER_LITERAL: [0-9] | [A-F] | [a-f];
+BREAK:					 'break';
+CONTINUE:				 'continue';
+DO:			   			 'do';
+ELSE:					 'else';
+EQUALS:					 'equals'; 
+FALSE:					 'false';
+FOR:					 'for';
+FOREACH:				 'foreach';
+IF:						 'if'; 
+NULL:					 'null';
+ORDERBY:				 'orderby';
+PARAMS:					 'params';	
+RETURN:					 'return';
+TRUE:					 'true';
+WHERE:					 'where'; 
+WHILE:					 'while';
 
-COMMA: ',';
-COLON: ':';
-DOUBLE_COLON: '::';
-PERIOD: '.';
-QUESTION_M:  '?'; 
-DOUBLE_QUESTION_M:   '??'; 
-SEMICOLON: ';';
+// <-------  ------->
 
-CARET:                    '^';
-BANG:                     '!';
-LT:                       '<';
-RT:                       '>';
-POINTER:                       '->';
+DOUBLE_QUESTION_MARK:    '??'; 
+QUESTION_MARK:			 '?';
+DOUBLE_COLON:			 '::';
+COLON:					 ':';
+COMMA:					 ',';
+PERIOD:					 '.';
+SEMICOLON:				 ';';
 
-LOWER_EQUAL : '<=';
-HIGHER_EQUAL : '>=';
-EQUAL: '==';
-NOT_EQUAL: '!=';
+CARET:                   '^';
+BANG:                    '!';
+LT:                      '<';
+RT:                      '>';
+POINTER:                 '->';
+
+LOWER_EQUAL :			 '<=';
+HIGHER_EQUAL :			 '>=';
+EQUAL:					 '==';
+NOT_EQUAL:				 '!=';
+LEFT_SHIFT:				 '<<';
+PIPE:					 '|';
+WAVE_DASH:				 '~';
+AMPERSAND:				 '&';
  
-ASSIGN: '=';
-ADD_ASSIGN: '+=';
-SUBSTRACT_ASSIGN: '-=';
-MULTIPLY_ASSIGN: '*=';
-DIVIDE_ASSIGN: '/=';
-MOD_ASSIGN: '%=';
-AND_ASSIGNMENT:        '&=';
-OR_ASSIGNMENT:         '|=';
-XOR_ASSIGNMENT:        '^=';
-LEFT_SHIFT:            '<<';
-LEFT_SHIFT_ASSIGNMENT: '<<=';
+// <------- ASSIGNS ------->
 
-AND: '&&';
-OR: '||';
+PLUS_ASSIGN:			 '+=';
+MINUS_ASSIGN:			 '-=';
+MUL_ASSIGN:				 '*=';
+DIV_ASSIGN:				 '/=';
+MOD_ASSIGN:				 '%=';
+AND_ASSIGN:				 '&=';
+OR_ASSIGN:				 '|=';
+XOR_ASSIGN:				 '^=';
+LEFT_SHIFT_ASSIGN:		 '<<=';
+ASSIGN:					 '=';
 
-INC: '++';
-DEC: '--';
-MUL: '*';
-DIV: '/';
-MOD: '%';
-PLUS: '+';
-MINUS: '-';
+// <------- LOGICAL ------->
 
-PIPE: '|';
-WAVE_DASH: '~';
-AMPERSAND: '&';
+AND:					 '&&';
+OR:						 '||';
 
-OPEN_BRACKET:             '[';
-CLOSE_BRACKET:            ']';
-OPEN_PARENS:              '(';
-CLOSE_PARENS:             ')';
-OPEN_BRACE:               '{'
+// <------- MATHEMATICAL ------->
+
+INC:					 '++';
+DEC:					 '--';
+
+PLUS:					 '+';
+MINUS:					 '-';
+MUL:					 '*';
+DIV:					 '/';
+MOD:					 '%';
+
+// <------- PARANTHESES ------->
+
+OPEN_BRACKET:            '[';
+CLOSE_BRACKET:           ']';
+OPEN_PARENS:             '(';
+CLOSE_PARENS:            ')';
+OPEN_BRACE:              '{'
 {
 if (interpolatedStringLevel > 0)
 {
@@ -481,22 +492,32 @@ if (interpolatedStringLevel > 0)
 }
 };
 
-LITERAL_ACCESS:      [0-9]+ IntegerTypeSuffix? '.' '@'? IdentifierOrKeyword;
-ORDERBY:       'orderby';
-PARAMS:        'params';	
-REAL_LITERAL:        [0-9]* '.' [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([FfDdMm] | ExponentPart [FfDdMm]?);
-INTEGER_LITERAL:     [0-9]+ IntegerTypeSuffix?;
+ // <------- OTHER ------->
 
-REGULAR_STRING:                      '"'  (~["\\\r\n\u0085\u2028\u2029] | CommonCharacter)* '"';
+IDENTIFIER:				 '@'? IdentifierOrKeyword;
+
+HEX_INTEGER_LITERAL:     [0-9]; 
+CHARACTER_LITERAL:	     [0-9] | [A-F] | [a-f];
+LITERAL_ACCESS:			 [0-9]+ IntegerTypeSuffix? '.' '@'? IdentifierOrKeyword;
+
+REAL_LITERAL:            [0-9]* '.' [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([FfDdMm] | ExponentPart [FfDdMm]?);
+INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
+
+REGULAR_STRING:          '"'  (~["\\\r\n\u0085\u2028\u2029] | CommonCharacter)* '"';
 INTERPOLATED_REGULAR_STRING_START:   '$"';
-DOUBLE_QUOTE_INSIDE:           '"' { interpolatedStringLevel--; interpolatedVerbatiums.Pop();
+DOUBLE_QUOTE_INSIDE:     '"' { interpolatedStringLevel--; interpolatedVerbatiums.Pop();
     verbatium = (interpolatedVerbatiums.Count > 0 ? interpolatedVerbatiums.Peek() : false); } -> popMode;
 DOUBLE_CURLY_INSIDE:           '{{';
 REGULAR_CHAR_INSIDE:           { !verbatium }? SimpleEscapeSequence;
 REGULAR_STRING_INSIDE:         { !verbatium }? ~('{' | '\\' | '"')+;
 FORMAT_STRING:                  ~'}'+;
 
+//Stop
+WS
+	:	' ' -> channel(HIDDEN)
+	;
 
+ // <------- FRAGMENTS ------->
 
 fragment IntegerTypeSuffix:         [lL]? [uU] | [uU]? [lL];
 fragment ExponentPart:              [eE] ('+' | '-')? [0-9]+;
@@ -593,13 +614,6 @@ fragment SimpleEscapeSequence
 	| '\\t'
 	| '\\v'
 	;
-
-
-//Stop
-WS
-	:	' ' -> channel(HIDDEN)
-	;
-
 
 // Unicode character classes
 fragment UnicodeClassLU
