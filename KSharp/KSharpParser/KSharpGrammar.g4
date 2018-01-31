@@ -8,20 +8,6 @@ options {
 @lexer::namespace{KSharpParser} 
 @parser::namespace{KSharpParser} 
 
-@lexer::header
-{
-   using System.Collections.Generic;
-}
-
-@lexer::members
-{
-private int interpolatedStringLevel;
-private Stack<bool> interpolatedVerbatiums = new Stack<bool>();
-private Stack<int> curlyLevels = new Stack<int>();
-private bool verbatium;
-}
-
-
 // <-------------------------------- Parser rules ---------------------------------------->
 
 argument_list
@@ -320,7 +306,6 @@ right_shift_assignment
 
 literal
 	: boolean_literal
-	| string_literal
 	| INTEGER_LITERAL
 	| HEX_INTEGER_LITERAL
 	| REAL_LITERAL
@@ -331,26 +316,6 @@ literal
 boolean_literal
 	: TRUE
 	| FALSE
-	;
-
-string_literal
-	: interpolated_regular_string
-	| REGULAR_STRING
-	;
-
-interpolated_regular_string
-	: INTERPOLATED_REGULAR_STRING_START interpolated_regular_string_part* DOUBLE_QUOTE_INSIDE
-	;
-
-interpolated_regular_string_part
-	: interpolated_string_expression
-	| DOUBLE_CURLY_INSIDE
-	| REGULAR_CHAR_INSIDE
-	| REGULAR_STRING_INSIDE
-	;
-
-interpolated_string_expression
-	: expression (COMMA expression)* (COLON FORMAT_STRING+)?
 	;
 
 //B.1.7 Keywords
@@ -472,25 +437,8 @@ OPEN_BRACKET:            '[';
 CLOSE_BRACKET:           ']';
 OPEN_PARENS:             '(';
 CLOSE_PARENS:            ')';
-OPEN_BRACE:              '{'
-{
-if (interpolatedStringLevel > 0)
-{
-    curlyLevels.Push(curlyLevels.Pop() + 1);
-}};
-CLOSE_BRACE:              '}'
-{
-if (interpolatedStringLevel > 0)
-{
-    curlyLevels.Push(curlyLevels.Pop() - 1);
-    if (curlyLevels.Peek() == 0)
-    {
-        curlyLevels.Pop();
-        Skip();
-        PopMode();
-    }
-}
-};
+OPEN_BRACE:				 '{';
+CLOSE_BRACE:			 '}';
 
  // <------- OTHER ------->
 
@@ -502,15 +450,6 @@ LITERAL_ACCESS:			 [0-9]+ IntegerTypeSuffix? '.' '@'? IdentifierOrKeyword;
 
 REAL_LITERAL:            [0-9]* '.' [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([FfDdMm] | ExponentPart [FfDdMm]?);
 INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
-
-REGULAR_STRING:          '"'  (~["\\\r\n\u0085\u2028\u2029] | CommonCharacter)* '"';
-INTERPOLATED_REGULAR_STRING_START:   '$"';
-DOUBLE_QUOTE_INSIDE:     '"' { interpolatedStringLevel--; interpolatedVerbatiums.Pop();
-    verbatium = (interpolatedVerbatiums.Count > 0 ? interpolatedVerbatiums.Peek() : false); } -> popMode;
-DOUBLE_CURLY_INSIDE:           '{{';
-REGULAR_CHAR_INSIDE:           { !verbatium }? SimpleEscapeSequence;
-REGULAR_STRING_INSIDE:         { !verbatium }? ~('{' | '\\' | '"')+;
-FORMAT_STRING:                  ~'}'+;
 
 //Stop
 WS

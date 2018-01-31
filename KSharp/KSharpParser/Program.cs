@@ -27,9 +27,12 @@ namespace KSharpParser
         }
         private void RunParser()
         {
-            AntlrInputStream inputStream = new AntlrInputStream("2 * 1");
+            AntlrInputStream inputStream = new AntlrInputStream("if (2 > 1) {break}");
             KSharpGrammarLexer lexer = new KSharpGrammarLexer(inputStream);
+           
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
+            commonTokenStream.Fill();
+            var tokens = commonTokenStream.GetTokens();
             KSharpGrammarParser parser = new KSharpGrammarParser(commonTokenStream);
             IParseTree tree = parser.expression();
             IParseTreeVisitor<object> visitor = new KSharpGrammarBaseVisitor<object>();
