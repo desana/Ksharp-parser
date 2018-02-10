@@ -25,21 +25,53 @@ namespace KSharpParserTests
 
         #endregion
 
-        [TestCase("1 < 2")]
-        [TestCase("1 + 2")]
+        // basic structures tests
+
+        [TestCase("Class.Member")]
+        [TestCase("Class.Mehod()")]
+        [TestCase("Variable")]
 
         [TestCase("1")]
 
-        [TestCase("a = 1")]
-        [TestCase("a = 1; a += 2")]
+        [TestCase("\"String\"")]
 
-        [TestCase("apple + pie")]
-        [TestCase("a = apple + pie")]
+        // logical operation tests
 
-        [TestCase("\"apple\"")]
-        [TestCase("\"apple\" + \"pie\"")]
-        [TestCase("a = \"apple\"")]
-        [TestCase("a = \"apple\" + \"pie\"")]
+        [TestCase("1 < 2")]
+
+        [TestCase("true && true")]
+
+        // bracket tests
+
+        [TestCase("{1 < 2}")]
+
+        // assignment test
+        
+        [TestCase("Variable = 1")]
+        [TestCase("Variable = \"String\"")]
+
+        // arithmetical tests
+
+        [TestCase("1 + 2")]              
+        [TestCase("SubVariable + AnotherSubVariable")]
+
+        [TestCase("Variable = 1; Variable += 2")]
+        [TestCase("Variable = SubVariable + AnotherSubVariable")]
+
+        // string operation tests
+
+        [TestCase("\"String\" + \"AnotherString\"")]
+        [TestCase("\"String\" - \"AnotherString\"")]
+
+        [TestCase("Variable = \"String\" + \"AnotherString\"")]        
+
+        // if tests
+
+        [TestCase("if (Condition) { return Value }")]        
+        [TestCase("if (Condition) { return Value } else { return AnotherValue }")]
+
+        [TestCase("if (!Condition) { return Value }")]
+
         public void ParseIsSuccessful(string input)
         {
             KSharpGrammarParser parser = CreateParserFromInput(input);
@@ -49,19 +81,20 @@ namespace KSharpParserTests
             Assert.AreEqual(parser.NumberOfSyntaxErrors, 0);
         }
 
+        // if tests
 
-        [TestCase("{1 < 2}")]
-        [TestCase("if 1 < 2")]
-        [TestCase("if 1 < 2 then 3")]
-        [TestCase("if (1 < 2) then 1")]
-        [TestCase("if 1 < 2 then {1}")]
-        [TestCase("if (1 < 2) then {1} else 2")]
-        [TestCase("if (1 < 2) else {3}")]
+        [TestCase("if Condition")]
+        [TestCase("if Condition return Value")]
+        [TestCase("if Condition { return Value }")]
 
-        [TestCase("if (1 < 2) then {1}")]
-        [TestCase("if (1 < 2) then {1} else {2}")]
-                      
-        // toto kentico nevie ale nepoklada to za nespravny stav[TestCase("\"apple\" - \"e\"")]
+        [TestCase("if (Condition) Value")]
+        [TestCase("if (Condition) { Value } else AnotherValue")]
+        [TestCase("if (Condition) else { return Value }")]
+        [TestCase("if (Condition) then { return Value } else { return Value }")]
+
+        // string operation tests
+
+        [TestCase("\"FinalString\" = \"String\" + \"AnotherString\"")]        
         public void ParseIsNotSuccessful(string input)
         {
             KSharpGrammarParser parser = CreateParserFromInput(input);

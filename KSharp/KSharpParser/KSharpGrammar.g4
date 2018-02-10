@@ -230,8 +230,8 @@ ordering
 	: expression;
 
 statement
-	: identifier COLON statement                                       #labeledStatement
-	| (local_variable_declaration) SEMICOLON  #declarationStatement
+	: identifier COLON statement                                     #labeledStatement
+	| (local_variable_declaration) SEMICOLON?						 #declarationStatement
 	| embedded_statement                                             #embeddedStatement
 	;
 
@@ -241,21 +241,21 @@ embedded_statement
 	;
 
 simple_embedded_statement
-	: SEMICOLON                                                         #emptyStatement
-	| expression SEMICOLON                                              #expressionStatement
+	: SEMICOLON                                                       #emptyStatement
+	| expression SEMICOLON?                                           #expressionStatement
 
 	// selection statements
 	| IF OPEN_PARENS expression CLOSE_PARENS if_body (ELSE if_body)?    #ifStatement
     
     // iteration statements
 	| WHILE OPEN_PARENS expression CLOSE_PARENS embedded_statement                                        #whileStatement
-	| DO embedded_statement WHILE OPEN_PARENS expression CLOSE_PARENS SEMICOLON                                 #doStatement
+	| DO embedded_statement WHILE OPEN_PARENS expression CLOSE_PARENS SEMICOLON?                                 #doStatement
 	| FOR OPEN_PARENS for_initializer? SEMICOLON expression? SEMICOLON for_iterator? CLOSE_PARENS embedded_statement  #forStatement
 
     // jump statements
-	| BREAK SEMICOLON                                                   #breakStatement
-	| CONTINUE SEMICOLON													 #continueStatement
-	| RETURN expression? SEMICOLON									  #returnStatement
+	| BREAK SEMICOLON?                                                   #breakStatement
+	| CONTINUE SEMICOLON?												 #continueStatement
+	| RETURN expression? SEMICOLON?									     #returnStatement
 	;
 
 block
