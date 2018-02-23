@@ -318,21 +318,6 @@ boolean_literal
 	| FALSE
 	;
 
-//B.1.7 Keywords
-keyword
-	: BREAK
-	| CONTINUE
-	| ELSE
-	| FALSE
-	| FOR
-	| FOREACH
-	| IF
-	| NULL
-	| RETURN	
-	| TRUE
-	| WHILE
-	;
-
 // -------------------- extra rules for modularization --------------------------------
 method_member_name
 	: (identifier | identifier DOUBLE_COLON identifier) (PERIOD identifier)*

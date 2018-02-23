@@ -63,9 +63,11 @@ namespace KSharpParserTests
         [TestCase("\"String\" + \"AnotherString\"")]
         [TestCase("\"String\" - \"AnotherString\"")]
 
-        [TestCase("Variable = \"String\" + \"AnotherString\"")]        
+        [TestCase("Variable = \"String\" + \"AnotherString\"")]
 
         // if tests
+
+        [TestCase("if (Condition) { return Value; }")]
 
         [TestCase("if (Condition) { return Value }")]        
         [TestCase("if (Condition) { return Value } else { return AnotherValue }")]
@@ -88,6 +90,7 @@ namespace KSharpParserTests
         [TestCase("if Condition { return Value }")]
 
         [TestCase("if (Condition) Value")]
+        [TestCase("if (Condition) return Value")] 
         [TestCase("if (Condition) { Value } else AnotherValue")]
         [TestCase("if (Condition) else { return Value }")]
         [TestCase("if (Condition) then { return Value } else { return Value }")]
