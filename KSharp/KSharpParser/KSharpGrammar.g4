@@ -19,8 +19,9 @@ argument
 	;
 
 expression 
-	: assignment
-	| non_assignment_expression 
+	: OPEN_BRACE expression CLOSE_BRACE
+	| assignment
+	| non_assignment_expression
 	;
 
 non_assignment_expression 
@@ -101,7 +102,8 @@ multiplicative_expression
 	;
 
 unary_expression
-    : primary_expression
+    : INTEGER_LITERAL MUL                         
+	| primary_expression
 	| PLUS unary_expression
 	| MINUS unary_expression
 	| BANG unary_expression
@@ -119,7 +121,7 @@ primary_expression  // Null-conditional operators C# 6: https://msdn.microsoft.c
 
 primary_expression_start
 	: literal                                   #literalExpression
-	| identifier           #simpleNameExpression
+	| identifier								#simpleNameExpression
 	| OPEN_PARENS expression CLOSE_PARENS       #parenthesisExpressions
 	| LITERAL_ACCESS                            #literalAccessExpression
 	;
