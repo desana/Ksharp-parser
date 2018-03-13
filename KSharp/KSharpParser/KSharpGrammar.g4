@@ -26,7 +26,12 @@ expression
 non_assignment_expression 
 	: lambda_expression 
 	| conditional_expression
+	| if_expression 
 	;
+
+if_expression
+	: IF OPEN_PARENS expression CLOSE_PARENS if_body (ELSE if_body)? 
+	; 
 
 assignment 
 	: unary_expression assignment_operator expression
@@ -105,7 +110,6 @@ unary_expression
 	| DEC unary_expression
 	| AMPERSAND unary_expression
 	| MUL unary_expression
-	| block
 	;
 
 primary_expression  // Null-conditional operators C# 6: https://msdn.microsoft.com/en-us/library/dn986595.aspx
@@ -243,9 +247,6 @@ embedded_statement
 simple_embedded_statement
 	: SEMICOLON                                                       #emptyStatement
 	| expression SEMICOLON?                                           #expressionStatement
-
-	// selection statements
-	| IF OPEN_PARENS expression CLOSE_PARENS if_body (ELSE if_body)?    #ifStatement
     
     // iteration statements
 	| WHILE OPEN_PARENS expression CLOSE_PARENS embedded_statement                                        #whileStatement
@@ -276,7 +277,7 @@ local_variable_initializer
 
 if_body
 	: block
-	| simple_embedded_statement
+	| OPEN_BRACE simple_embedded_statement CLOSE_BRACE
 	;
 
 statement_list

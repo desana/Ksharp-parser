@@ -33,6 +33,8 @@ namespace KSharpParserTests
 
         [TestCase("1")]
 
+        [TestCase("true")]
+
         [TestCase("\"String\"")]
 
         // logical operation tests
@@ -44,9 +46,10 @@ namespace KSharpParserTests
         // bracket tests
 
         [TestCase("{1 < 2}")]
+        [TestCase("if (!Condition) {{ return Value }}")]
 
         // assignment test
-        
+
         [TestCase("Variable = 1")]
         [TestCase("Variable = \"String\"")]
 
