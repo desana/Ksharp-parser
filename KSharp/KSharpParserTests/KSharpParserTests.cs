@@ -52,7 +52,7 @@ namespace KSharprTests
             [TestCase("\"String\"")]
             public void BasicStructures_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -64,7 +64,7 @@ namespace KSharprTests
             [TestCase("true && true")]
             public void Logical_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -76,7 +76,7 @@ namespace KSharprTests
             [TestCase("if (!Condition) {{ return Value }}")]
             public void Braces_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -88,7 +88,7 @@ namespace KSharprTests
             [TestCase("Variable = \"String\"")]
             public void Assignment_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -104,7 +104,7 @@ namespace KSharprTests
             [TestCase("Variable = SubVariable + AnotherSubVariable")]
             public void Arithmetical_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -118,14 +118,14 @@ namespace KSharprTests
             [TestCase("Variable = \"String\" + \"AnotherString\"")]
             public void String_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
 
 
             [TestCase("\"FinalString\" = \"String\" + \"AnotherString\"")]
             public void String_IsNotSuccessful(string input)
             {
-                Assert.AreNotEqual(GetParsingErrors(input), 0);
+                Assert.AreNotEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -141,7 +141,7 @@ namespace KSharprTests
             [TestCase("if (!Condition) { return Value }")]
             public void If_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
 
 
@@ -156,7 +156,7 @@ namespace KSharprTests
             [TestCase("if (Condition) then { return Value } else { return Value }")]
             public void If_IsNotSuccessful(string input)
             {
-                Assert.AreNotEqual(GetParsingErrors(input), 0);
+                Assert.AreNotEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -168,7 +168,7 @@ namespace KSharprTests
             [TestCase("lambdaMultiply = ((x, y) => x * y); lambdaMultiply(2,3)")]
             public void Lambda_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -176,14 +176,20 @@ namespace KSharprTests
         [TestFixture]
         public class ForTests
         {
-            [TestCase("z = 0; for (i = 0; i < 5; i++) { z += 1 }; z")]
-            [TestCase("z = 0; for (i = 0; i < 5; i++) { z += 1 } ")]
-            [TestCase("for (i=0; i<=5 ; i++) {if (i == 3) {continue}; i}")]
-
             [TestCase("for (i=0; i<=5 ; i++) {i}")]
+
+            [TestCase("z = 0; for (i = 0; i < 5; i++) { z += 1 }; z")]
+            [TestCase("z = 0; for (i = 0; i < 5; i++) { z += 1 } ")]                      
             public void For_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
+            }
+
+
+            [TestCase("for (i = 0; if (z<10) {a++}; i++) { z += 1 };")]
+            public void For_IsNotSuccessful(string input)
+            {
+                Assert.AreNotEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -191,11 +197,14 @@ namespace KSharprTests
         [TestFixture]
         public class ForeachTests
         {
-            [TestCase("z = \"\"; foreach (x in \"hello\") {z += x.toupper()}; z")]
+            [TestCase("foreach (x in y) {x.toupper()}")]
+
+            [TestCase("foreach (x in \"hello\") {z += x.toupper()}")]
             [TestCase("z = \"\"; foreach (x in \"hello\") {z += x.toupper()}")]
+            [TestCase("z = \"\"; foreach (x in \"hello\") {z += x.toupper()}; z")]
             public void Foreach_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -205,14 +214,23 @@ namespace KSharprTests
         {
             [TestCase("z = 1; while (z<10) {++z}; z")]
             [TestCase("z = 1; while (z<10) {++z} ")]
-            
+
+            [TestCase("while (z<10) {++z} ")]
+
             [TestCase("z = 0; while (z < 10) {if (z > 4) {break}; ++z}")]
 
             [TestCase("i = 1; while (i < 4) {print(i++)}; \"ignored\"")]
             [TestCase("i = 1; while (i < 4) {print(i++)}; return \"result\"")]
             public void While_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
+            }
+
+
+            [TestCase("while (if (z<10) {a++}) {++z} ")]
+            public void While_IsNotSuccessful(string input)
+            {
+                Assert.AreNotEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -228,7 +246,7 @@ namespace KSharprTests
             [TestCase("x = 5; y = 3; /* This is an inline comment nested in the middle of an expression. */ x+= 2; x + y")]
             public void Comment_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -239,9 +257,10 @@ namespace KSharprTests
             [TestCase("foreach (page in CurrentDocument.CultureVersions) {if (page.DocumentCulture != CurrentDocument.DocumentCulture) {\"<link rel=\"alternate\" href=\"\"+ page.AbsoluteUrl + \"\" hreflang=\"\"+ page.DocumentCulture +\"\"/>\";}}")]
             [TestCase("GlobalObjects.Users[\"administrator\"].FullName")]
 
-            // Documentation examples https://docs.kentico.com/k11/macro-expressions/macro-syntax
-
             // Todo: categorize
+            [TestCase("\"string\" + 5")]
+            [TestCase("ResolveBBCode(\"[quote]Sample text[/ quote]\")")]
+            [TestCase("FormatPrice(GetSKUTax(SKUID), false)")]
 
             [TestCase("CurrentPageInfo.DocumentPageTitle + \" | suffix\"")]
             [TestCase("CurrentDocument.Children.FirstItem ?? \"No child pages\"")]
@@ -256,6 +275,8 @@ namespace KSharprTests
 
             [TestCase("\"word\".ToUpper()")]
             [TestCase("ToUpper(\"word\")")]
+
+            [TestCase("for (i=0; i<=5 ; i++) {if (i == 3) {continue}; i}")]
 
             [TestCase("x = 5; x + 7")]
             [TestCase("x = 5; y = 3; x += 2; x + y")]
@@ -279,7 +300,7 @@ namespace KSharprTests
             [TestCase("Contains(\"term\", ArticleText)|(casesensitive)true")]
             [TestCase("GetDocumentUrl()|(timeout)2000")]
             [TestCase("QueryString.Param|(handlesqlinjection)true")]
-            [TestCase("Documents[\" / News\"].Children.WithAllData|(debug)true")]
+            [TestCase("Documents[\"/News\"].Children.WithAllData|(debug)true")]
 
             // Other documentation  // todo advanced text processing https://docs.kentico.com/k11/macro-expressions/reference-macro-methods 
 
@@ -308,7 +329,7 @@ namespace KSharprTests
             [TestCase("DocumentName.ToString()")]
             [TestCase("DocumentName.ToString(\"defaultValue\")")]
             [TestCase("DocumentName.ToString(\"defaultValue\", \"en - US\")")]
-            [TestCase("DocumentName.ToString(\"defaultValue\", DocumentCulture, \"Document name is: {0}\")")]
+            [TestCase("DocumentName.ToString( \"defaultValue\", DocumentCulture, \"Document name is: {0}\")")]
             [TestCase("DocumentID.ToInt()")]
             [TestCase("DocumentShowInSiteMap.ToBool()")]
             [TestCase("DocumentID.ToDecimal()")]
@@ -317,14 +338,14 @@ namespace KSharprTests
             [TestCase("DocumentID.ToDouble(\"0.0\", DocumentCulture)")]
             [TestCase("DocumentGUID.ToGuid()")]
             [TestCase("ToDateTime(\"12/31/2017 11:59 PM\")")]
-            [TestCase(" FromOADate(43100.999305556) ")]
+            [TestCase("FromOADate(43100.999305556) ")]
             [TestCase("ToTimeSpan(\"1:00:00\")")]
             [TestCase("CurrentUser.ToBaseInfo()")]
             [TestCase("List(\"Apple\", \"Orange\", \"Banana\")")]
                         
             public void Misc_IsSuccessful(string input)
             {
-                Assert.AreEqual(GetParsingErrors(input), 0);
+                Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
     }

@@ -25,9 +25,28 @@ expression
 	;
 
 non_assignment_expression 
-	: lambda_expression 
+	: lambda_expression
 	| conditional_expression
-	| if_expression 
+	| if_expression  
+	| loop_expression
+	;
+
+loop_expression
+	: foreach_expression
+	| for_expression
+	| while_expression
+	;
+
+while_expression
+	:  WHILE OPEN_PARENS conditional_expression CLOSE_PARENS embedded_statement    
+	;
+
+for_expression
+	: FOR OPEN_PARENS for_initializer? SEMICOLON conditional_expression? SEMICOLON for_iterator? CLOSE_PARENS embedded_statement 
+	;
+
+foreach_expression
+	: FOREACH OPEN_PARENS conditional_expression IN conditional_expression CLOSE_PARENS embedded_statement
 	;
 
 if_expression
@@ -35,7 +54,7 @@ if_expression
 	; 
 
 assignment 
-	: unary_expression assignment_operator expression
+	: unary_expression assignment_operator conditional_expression
 	;
 
 assignment_operator
@@ -249,11 +268,6 @@ embedded_statement
 simple_embedded_statement
 	: SEMICOLON                                                       #emptyStatement
 	| expression SEMICOLON?                                           #expressionStatement
-    
-    // iteration statements
-	| WHILE OPEN_PARENS expression CLOSE_PARENS embedded_statement                                        #whileStatement
-	| DO embedded_statement WHILE OPEN_PARENS expression CLOSE_PARENS SEMICOLON?                                 #doStatement
-	| FOR OPEN_PARENS for_initializer? SEMICOLON expression? SEMICOLON for_iterator? CLOSE_PARENS embedded_statement  #forStatement
 
     // jump statements
 	| BREAK SEMICOLON?                                                   #breakStatement
@@ -288,11 +302,11 @@ statement_list
 
 for_initializer
 	: local_variable_declaration
-	| expression (COMMA  expression)*
+	| conditional_expression (COMMA  conditional_expression)*
 	;
 
 for_iterator
-	: expression (COMMA  expression)*
+	: conditional_expression (COMMA  conditional_expression)*
 	;
 
 right_arrow
@@ -357,6 +371,7 @@ FALSE:					 'false';
 FOR:					 'for';
 FOREACH:				 'foreach';
 IF:						 'if'; 
+IN:						 'in'; 
 NULL:					 'null';
 ORDERBY:				 'orderby';
 PARAMS:					 'params';	
@@ -429,7 +444,8 @@ OPEN_BRACE:				 '{';
 CLOSE_BRACE:			 '}';
 
  // <------- OTHER ------->
-
+SLASH:					 '/';
+ASTERISK:				 '*';
 IDENTIFIER:				 '@'? IdentifierOrKeyword;
 
 HEX_INTEGER_LITERAL:     [0-9]; 
@@ -440,6 +456,7 @@ REAL_LITERAL:            [0-9]* '.' [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([Ff
 INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
 
 //Stop
+NEWLINE: ('\r\n'|'\n'|'\r');
 WS
 	:	' ' -> channel(HIDDEN)
 	;
