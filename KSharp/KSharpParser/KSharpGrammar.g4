@@ -54,7 +54,7 @@ if_expression
 	; 
 
 assignment 
-	: unary_expression assignment_operator conditional_expression
+	: IDENTIFIER assignment_operator conditional_expression
 	;
 
 assignment_operator
@@ -205,15 +205,6 @@ member_declarator
 	| identifier ASSIGN expression
 	;
 
-unbound_type_name
-	: identifier ( generic_dimension_specifier? | DOUBLE_COLON identifier generic_dimension_specifier?)
-	  (PERIOD identifier generic_dimension_specifier?)*
-	;
-
-generic_dimension_specifier
-	: LT COMMA* RT
-	;
-
 lambda_expression
 	: anonymous_function_signature right_arrow anonymous_function_body
 	;
@@ -241,18 +232,6 @@ anonymous_function_body
 	: expression
 	| block
 	;
-
-query_body
-	: orderby_clause* 
-	;
-
-
-orderby_clause
-	: ORDERBY ordering (COMMA  ordering)*
-	;
-
-ordering
-	: expression;
 
 statement
 	: identifier COLON statement                                     #labeledStatement
@@ -323,6 +302,7 @@ right_shift_assignment
 
 literal
 	: boolean_literal
+	| string_literal
 	| INTEGER_LITERAL
 	| HEX_INTEGER_LITERAL
 	| REAL_LITERAL
@@ -333,6 +313,12 @@ literal
 boolean_literal
 	: TRUE
 	| FALSE
+	;
+
+
+string_literal
+	: REGULAR_STRING
+	| VERBATIUM_STRING
 	;
 
 // -------------------- extra rules for modularization --------------------------------
@@ -389,6 +375,7 @@ COLON:					 ':';
 COMMA:					 ',';
 PERIOD:					 '.';
 SEMICOLON:				 ';';
+DOUBLE_QUOTE:			 '"';
 
 CARET:                   '^';
 BANG:                    '!';
@@ -450,6 +437,8 @@ IDENTIFIER:				 '@'? IdentifierOrKeyword;
 
 HEX_INTEGER_LITERAL:     [0-9]; 
 CHARACTER_LITERAL:	     [0-9] | [A-F] | [a-f];
+REGULAR_STRING:                      '"'  (~["\\\r\n\u0085\u2028\u2029] | CommonCharacter)* '"';
+VERBATIUM_STRING:                    '@"' (~'"' | '""')* '"';
 LITERAL_ACCESS:			 [0-9]+ IntegerTypeSuffix? '.' '@'? IdentifierOrKeyword;
 
 REAL_LITERAL:            [0-9]* '.' [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([FfDdMm] | ExponentPart [FfDdMm]?);
@@ -461,7 +450,15 @@ WS
 	:	' ' -> channel(HIDDEN)
 	;
 
+COMMENT
+    :   ( '//' ([0-9] | [A-F] | [a-f])* '\n' 
+	| '/*' .*? '*/') 
+	-> channel(HIDDEN)
+    ;
+
  // <------- FRAGMENTS ------->
+
+fragment InputCharacter:       ~[\r\n\u0085\u2028\u2029];
 
 fragment IntegerTypeSuffix:         [lL]? [uU] | [uU]? [lL];
 fragment ExponentPart:              [eE] ('+' | '-')? [0-9]+;
