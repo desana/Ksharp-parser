@@ -38,19 +38,19 @@ loop_expression
 	;
 
 while_expression
-	:  WHILE OPEN_PARENS conditional_expression CLOSE_PARENS embedded_statement    
+	:  WHILE OPEN_PARENS conditional_expression CLOSE_PARENS block    
 	;
 
 for_expression
-	: FOR OPEN_PARENS for_initializer? SEMICOLON conditional_expression? SEMICOLON for_iterator? CLOSE_PARENS embedded_statement 
+	: FOR OPEN_PARENS for_initializer? SEMICOLON conditional_expression? SEMICOLON for_iterator? CLOSE_PARENS block 
 	;
 
 foreach_expression
-	: FOREACH OPEN_PARENS conditional_expression IN conditional_expression CLOSE_PARENS embedded_statement
+	: FOREACH OPEN_PARENS conditional_expression IN conditional_expression CLOSE_PARENS block
 	;
 
 if_expression
-	: IF OPEN_PARENS expression CLOSE_PARENS if_body (ELSE if_body)? 
+	: IF OPEN_PARENS conditional_expression CLOSE_PARENS block (ELSE block)? 
 	; 
 
 assignment 
@@ -251,7 +251,7 @@ simple_embedded_statement
     // jump statements
 	| BREAK SEMICOLON?                                                   #breakStatement
 	| CONTINUE SEMICOLON?												 #continueStatement
-	| RETURN expression? SEMICOLON?									     #returnStatement
+	| RETURN conditional_expression? SEMICOLON?							#returnStatement
 	;
 
 block
@@ -268,11 +268,6 @@ local_variable_declarator
 
 local_variable_initializer
 	: expression
-	;
-
-if_body
-	: block
-	| OPEN_BRACE simple_embedded_statement CLOSE_BRACE
 	;
 
 statement_list
