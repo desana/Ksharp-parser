@@ -440,16 +440,10 @@ REAL_LITERAL:            [0-9]* '.' [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([Ff
 INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
 
 //Stop
-NEWLINE: ('\r\n'|'\n'|'\r');
-WS
-	:	' ' -> channel(HIDDEN)
-	;
+NEWLINE: ('\r\n'|'\n'|'\r')  -> channel(HIDDEN);
+WS	: ' ' -> channel(HIDDEN);
 
-COMMENT
-    :   ( '//' ([0-9] | [A-F] | [a-f])* '\n' 
-	| '/*' .*? '*/') 
-	-> channel(HIDDEN)
-    ;
+COMMENT:  ( '//' .*? 	| '/*' .*? '*/') -> channel(HIDDEN);
 
  // <------- FRAGMENTS ------->
 
