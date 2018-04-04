@@ -43,12 +43,27 @@ namespace KSharprTests
             [TestCase("Class.Mehod()")]
             [TestCase("Variable")]
 
+            [TestCase("true")]
+            [TestCase("false")]
+
             [TestCase("1")]
+            [TestCase("98746311")]
+
             [TestCase("-1")]
+            [TestCase("-98746311")]
+
+            [TestCase("3.465e-5")]
+            [TestCase("3.465e+5")]
+            [TestCase("3.465")]
+            [TestCase("3,465")]
+
+            [TestCase("identifier")]
+            [TestCase("2identifier")]
+ 
             [TestCase("30%")]
 
             [TestCase("true")]
-            [TestCase("")]
+            
             [TestCase(";")]
             [TestCase(";;;")]
 
@@ -62,7 +77,7 @@ namespace KSharprTests
             [TestCase(")", Description = "Unexpected token")]
             [TestCase("{% () %}", Description = "No content in the brackets")]
             [TestCase("1 |+} 2 ", Description = "Invalid operator")]
-            public void NotSuccessful(string input)
+            public void BasicStructures_NotSuccessful(string input)
             {
                 Assert.AreNotEqual(0, GetParsingErrors(input));
             }
@@ -73,7 +88,7 @@ namespace KSharprTests
         public class LogicalTests
         {
             [TestCase("1 < 2")]
-            [TestCase("true && true")]
+            
             [TestCase("true || true")]
             [TestCase("false || false")]
             [TestCase("false || true")]
@@ -82,9 +97,11 @@ namespace KSharprTests
             [TestCase("false && false")]
             [TestCase("false && true")]
             [TestCase("true && false")]
+
             [TestCase("null == 0 || null == null")]
             [TestCase("0 == 0 || 0 == null")]
             [TestCase("1 == 0 || 1 == null")]
+
             [TestCase(@"1==1 && ""a""==""a""")]
             [TestCase(@"1==1 and ""a""==""a""")]
             [TestCase(@"1==0 && 2==2")]
@@ -125,6 +142,14 @@ namespace KSharprTests
             public void Assignment_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
+            }
+
+
+            [TestCase("5 = 7 + 2")]
+            [TestCase("\"FinalString\" = \"String\" + \"AnotherString\"")]
+            public void Assignment_NotSuccessful(string input)
+            {
+                Assert.AreNotEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -172,15 +197,19 @@ namespace KSharprTests
             [TestCase("\"\" + ToDouble(\"2.45\", 0, \"en-us\")")]
             [TestCase("\"\" + ToDouble(\"2,45\", 0, \"cs-cz\")")]
             [TestCase("\"\" + ToDouble(\"2,45\")")]
-            public void String_IsSuccessful(string input)
+            public void Double_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
 
-            [TestFixture]
+
+        [TestFixture]
         public class StringTests
         {
+            [TestCase("")]
+            [TestCase(" ")]
+
             [TestCase("\"String\" + \"AnotherString\"")]
             [TestCase("\"String\" - \"AnotherString\"")]
 
@@ -193,10 +222,9 @@ namespace KSharprTests
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
-
-
-            [TestCase("\"FinalString\" = \"String\" + \"AnotherString\"")]
-            [TestCase("5 = 7 + 2")]
+                      
+            [TestCase("@\"\"\"")]
+            [TestCase("@\"\"\"\"\"")]
             public void String_NotSuccessful(string input)
             {
                 Assert.AreNotEqual(0, GetParsingErrors(input));
@@ -207,7 +235,7 @@ namespace KSharprTests
         [TestFixture]
         public class IfTests
         {
-            [TestCase("if (Condition) { return Value; }")]
+            [TestCase("if (Condition) { Value; }")]
 
             [TestCase("if (Condition) { return Value }")]        
             [TestCase("if (Condition) { return Value } else { return AnotherValue }")]
@@ -219,6 +247,7 @@ namespace KSharprTests
 
             [TestCase("cond = \"should go through\"; if (cond) { 1 } else { 0 }")]
             [TestCase("cond = null; if (cond) { 1 } else { 0 }")]
+
             [TestCase("if (15) { 1 } else { 0 }")]
             [TestCase("if (-15) { 1 } else { 0 }")]
             [TestCase("if (0) { 1 } else { 0 }")]
@@ -237,6 +266,9 @@ namespace KSharprTests
             [TestCase("if (Condition) { Value } else AnotherValue")]
             [TestCase("if (Condition) else { return Value }")]
             [TestCase("if (Condition) then { return Value } else { return Value }")]
+
+            [TestCase("if () {return Value}")]
+            [TestCase("if (if (1 > 2){return 1}) {return Value}")]
             public void If_NotSuccessful(string input)
             {
                 Assert.AreNotEqual(0, GetParsingErrors(input));
@@ -265,15 +297,19 @@ namespace KSharprTests
         public class ReturnTests
         {
             [TestCase("return \"output\"")]
+
             [TestCase("return 2 * 3 - (2 + 1)")]
+            [TestCase("return 2 + 3 * (1 + 2)")]
+
             [TestCase("x = 0; for (i = 0; i < 10; i++) { x += i; if (i == 5) { return x; } }")]
+
             [TestCase("print(\"should not be output\"); return \"output\"")]
             [TestCase("return \"first\"; return \"second\"")]
+
             [TestCase("x = 0; for (i = 0; i < 10; i++) { print(i); if (i == 5) { return; } }")]
             [TestCase("x = 0; for (i = 0; i < 10; i++) { print(i); if (i == 5) { return unresolved; } }")]
             [TestCase("x = 0; for (i = 0; i < 10; i++) { print(i); if (i == 5) { return; } }")]
-            [TestCase("x = 0; for (i = 0; i < 10; i++) { if (i == 5) { return; } }")]
-            [TestCase("return 2 + 3 * (1 + 2)")]
+            [TestCase("x = 0; for (i = 0; i < 10; i++) { if (i == 5) { return; } }")]            
             public void Return_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
@@ -320,6 +356,11 @@ namespace KSharprTests
             [TestCase("for (x = 10) { x }")]
             [TestCase("for (x = 1; x < 10; x++)")]
             [TestCase("for (x = 1; x < 10) { x }")]
+
+            [TestCase("for (x = 1; if (1>2){return Value;}; x++){return null;}")]
+
+
+            [TestCase("4; y = for (i = 1; i <= 3; i++) { i; } 5;")]
             public void For_NotSuccessful(string input)
             {
                 Assert.AreNotEqual(0, GetParsingErrors(input));
@@ -346,6 +387,15 @@ namespace KSharprTests
             public void Foreach_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
+            }
+
+
+            [TestCase("foreach (x.y in \"output\") { print(x.y) }")]
+            [TestCase("foreach (x in \"output\") print(x)")]
+            [TestCase("y = foreach (x in \"output\") print(x)")]
+            public void Foreach_NotSuccessful(string input)
+            {
+                Assert.AreNotEqual(0, GetParsingErrors(input));
             }
         }
 
@@ -374,7 +424,11 @@ namespace KSharprTests
             }
 
 
+            [TestCase("while (true) print(x.y)")]
             [TestCase("while (if (z<10) {a++}) {++z} ")]
+
+
+            [TestCase("y = while (z<10) {++z} ")]
             public void While_NotSuccessful(string input)
             {
                 Assert.AreNotEqual(0, GetParsingErrors(input));
@@ -404,6 +458,11 @@ namespace KSharprTests
         Can span across any number of lines.
         */ ")]
             [TestCase("x = 5; y = 3; /* This is an inline comment nested in the middle of an expression. */ x+= 2; x + y")]
+
+            [TestCase("// c\nx=\"5\"")]
+            [TestCase("// c\r\nx=\"5\"")]
+
+            [TestCase("object.method(param1, /* comment */ ++param2, param3--, inner())")]
             public void Comment_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
@@ -537,6 +596,7 @@ namespace KSharprTests
             }
         }
 
+
         [TestFixture]
         public class MathTests
         {
@@ -601,13 +661,28 @@ return c
             [TestCase("print(\"Console priority\"); \"overriden\"")]
             [TestCase("print(\"Console\"); 2 + 3; return")]
             [TestCase("print(\"Console priority\") + \" works\"")]
-            [TestCase()]
-            [TestCase()]
-            [TestCase()]
+            [TestCase("\"Simple string literal\"")]
+            [TestCase("\"3.456\"")]
+            [TestCase("\"\"")]
+            [TestCase("\"\\\"\"")]
+            [TestCase("@\"\"")]
+
+
+
+            [TestCase("2.48 + 0.02-- + ++2.0e-1;")]
+            [TestCase("2.48e-a")]
+            [TestCase("(x,y) => x*func(y)")]
+   
+            [TestCase("x[y[z]]")]
+            [TestCase("if (x++) { a } else { z }")]
+            [TestCase("x mod y == 2 of 100")]
+            [TestCase("23.ToString(true)")]
+            [TestCase("ahoj23.ToString(false)")]
+            [TestCase("x=-1")]
+            [TestCase("x==-1")]
 
             [TestCase("")]
             [TestCase("null")]
-            [TestCase("1")]
             [TestCase("4.5")]
             [TestCase("1/5")]
             [TestCase("\"X\"")]
@@ -617,17 +692,13 @@ return c
             [TestCase("\"X\"; return \"Y\"; \"Z\"")]
             [TestCase("\"X\"; print(\"Y\"); \"Z\"; print(\"W\")")]
             [TestCase("i = 4; x = ((i mod 2) == 0); x ? \"yes\" : \"no\"")]
-            public void Other_IsSuccessful(string input)
-            {
-                Assert.AreEqual(0, GetParsingErrors(input));
-            }
-        }
-
-        [TestFixture]
-        public class EncodeTests
-        {
             [TestCase("\"<br>\"")]
-            public void Encode_IsSuccessful(string input)
+            [TestCase(@"2++;3;-4 // comment
+/* comment
+ * multiline */
+_id /* inline comment */ + _id2 + @""ahoj
+jak """" \n se mas""")]
+            public void Other_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
