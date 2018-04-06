@@ -1,0 +1,16 @@
+configuration: Debug
+
+image: Visual Studio 2017
+
+before_build:
+  - nuget restore 
+
+build:
+  verbosity: minimal
+  publish_wap: true
+
+
+test:
+   assemblies:
+- ./KSharp/KSharpParserTests/bin/Debug/KSharpParserTests.dll
+
