@@ -12,5 +12,5 @@ build:
 
 test:
    assemblies:
-- ./KSharp/KSharpParserTests/bin/Debug/KSharpParserTests.dll
+- ./KSharpParserTests/bin/Debug/KSharpParserTests.dll
 
