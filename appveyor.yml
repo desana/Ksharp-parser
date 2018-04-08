@@ -3,7 +3,7 @@ configuration: Debug
 image: Visual Studio 2017
 
 before_build:
-  - nuget restore 
+  - nuget restore ./KSharp/KSharp.sln
 
 build:
   verbosity: minimal
