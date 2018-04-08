@@ -50,12 +50,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KSharpGrammar.g4.lexer.cs">
-      <DependentUpon>KSharpGrammar.g4</DependentUpon>
-    </Compile>
-    <Compile Include="KSharpGrammar.g4.parser.cs">
-      <DependentUpon>KSharpGrammar.g4</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
