@@ -323,6 +323,8 @@ namespace KSharprTests
             [TestCase("lambdaSucc = (x => x + 1); lambdaSucc(3)")]
             [TestCase("lambdaMultiply = ((x, y) => x * y); lambdaMultiply(2,3)")]
 
+            [TestCase("(x,y) => x*func(y)")]
+
             [TestCase("lambda = x => x * 2; lambda(lambda(5))")]
             [TestCase("lambda = (x, y, z) => x * y + z; lambda(5, 4, 3)")]
             public void Lambda_IsSuccessful(string input)
@@ -358,8 +360,7 @@ namespace KSharprTests
             [TestCase("for (x = 1; x < 10) { x }")]
 
             [TestCase("for (x = 1; if (1>2){return Value;}; x++){return null;}")]
-
-
+            
             [TestCase("4; y = for (i = 1; i <= 3; i++) { i; } 5;")]
             public void For_NotSuccessful(string input)
             {
@@ -392,7 +393,11 @@ namespace KSharprTests
 
             [TestCase("foreach (x.y in \"output\") { print(x.y) }")]
             [TestCase("foreach (x in \"output\") print(x)")]
-            [TestCase("y = foreach (x in \"output\") print(x)")]
+
+            [TestCase("y = foreach (x in \"output\") { print(x) }")]
+            
+            [TestCase("foreach (1+1 in 2+2) { x }")]
+            [TestCase("foreach (i in 2+2) { x }")]
             public void Foreach_NotSuccessful(string input)
             {
                 Assert.AreNotEqual(0, GetParsingErrors(input));
@@ -426,8 +431,7 @@ namespace KSharprTests
 
             [TestCase("while (true) print(x.y)")]
             [TestCase("while (if (z<10) {a++}) {++z} ")]
-
-
+            
             [TestCase("y = while (z<10) {++z} ")]
             public void While_NotSuccessful(string input)
             {
@@ -456,7 +460,7 @@ namespace KSharprTests
             [TestCase(@"/* This is a multi - line comment.
         Opened by a forward slash - asterisk sequence and closed with the asterisk - forward slash sequence.
         Can span across any number of lines.
-        */ ")]
+        */")]
             [TestCase("x = 5; y = 3; /* This is an inline comment nested in the middle of an expression. */ x+= 2; x + y")]
 
             [TestCase("// c\nx=\"5\"")]
@@ -670,8 +674,7 @@ return c
 
 
             [TestCase("2.48 + 0.02-- + ++2.0e-1;")]
-            [TestCase("2.48e-a")]
-            [TestCase("(x,y) => x*func(y)")]
+
    
             [TestCase("x[y[z]]")]
             [TestCase("if (x++) { a } else { z }")]
@@ -681,9 +684,6 @@ return c
             [TestCase("x=-1")]
             [TestCase("x==-1")]
 
-            [TestCase("")]
-            [TestCase("null")]
-            [TestCase("4.5")]
             [TestCase("1/5")]
             [TestCase("\"X\"")]
             [TestCase("\"X\"; \"Y\";")]
