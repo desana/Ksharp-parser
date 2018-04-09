@@ -361,7 +361,7 @@ namespace KSharprTests
 
             [TestCase("for (x = 1; if (1>2){return Value;}; x++){return null;}")]
             
-            [TestCase("4; y = for (i = 1; i <= 3; i++) { i; } 5;")]
+            [TestCase("y = for (i = 1; i <= 3; i++) { i; }")]
             public void For_NotSuccessful(string input)
             {
                 Assert.AreNotEqual(0, GetParsingErrors(input));

@@ -46,7 +46,7 @@ for_expression
 	;
 
 foreach_expression
-	: FOREACH OPEN_PARENS conditional_expression IN conditional_expression CLOSE_PARENS block
+	: FOREACH OPEN_PARENS IDENTIFIER IN unary_expression CLOSE_PARENS block
 	;
 
 if_expression
@@ -251,7 +251,7 @@ simple_embedded_statement
     // jump statements
 	| BREAK SEMICOLON?                                                   #breakStatement
 	| CONTINUE SEMICOLON?												 #continueStatement
-	| RETURN conditional_expression? SEMICOLON?							#returnStatement
+	| RETURN conditional_expression? SEMICOLON?							 #returnStatement
 	;
 
 block
