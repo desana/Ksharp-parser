@@ -234,18 +234,22 @@ right_shift_assignment
 literal
 	: boolean_literal
 	| string_literal
+	| percent_literal
 	| INTEGER_LITERAL
 	| HEX_INTEGER_LITERAL
 	| REAL_LITERAL
 	| CHARACTER_LITERAL
-	| NULL
+	| NULL	  
+	;
+
+percent_literal
+	: INTEGER_LITERAL MOD
 	;
 
 boolean_literal
 	: TRUE
 	| FALSE
 	;
-
 
 string_literal
 	: REGULAR_STRING
