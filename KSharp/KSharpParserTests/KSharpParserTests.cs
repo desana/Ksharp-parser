@@ -62,9 +62,7 @@ namespace KSharprTests
             [TestCase("指")]
 
             [TestCase("30%")]
-
-            [TestCase("true")]
-            
+                        
             [TestCase(";")]
             [TestCase(";;;")]
 
@@ -223,7 +221,8 @@ namespace KSharprTests
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
-                      
+                     
+             
             [TestCase("@\"\"\"")]
             [TestCase("@\"\"\"\"\"")]
             public void String_NotSuccessful(string input)
@@ -309,7 +308,6 @@ namespace KSharprTests
 
             [TestCase("x = 0; for (i = 0; i < 10; i++) { print(i); if (i == 5) { return; } }")]
             [TestCase("x = 0; for (i = 0; i < 10; i++) { print(i); if (i == 5) { return unresolved; } }")]
-            [TestCase("x = 0; for (i = 0; i < 10; i++) { print(i); if (i == 5) { return; } }")]
             [TestCase("x = 0; for (i = 0; i < 10; i++) { if (i == 5) { return; } }")]            
             public void Return_IsSuccessful(string input)
             {
