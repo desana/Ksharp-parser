@@ -59,7 +59,8 @@ namespace KSharprTests
 
             [TestCase("identifier")]
             [TestCase("2identifier")]
- 
+            [TestCase("指")]
+
             [TestCase("30%")]
 
             [TestCase("true")]
@@ -73,7 +74,7 @@ namespace KSharprTests
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
 
-            [TestCase("指", Description = "Invalid identifier")]
+
             [TestCase(")", Description = "Unexpected token")]
             [TestCase("{% () %}", Description = "No content in the brackets")]
             [TestCase("1 |+} 2 ", Description = "Invalid operator")]
