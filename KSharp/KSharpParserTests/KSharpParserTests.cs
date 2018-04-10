@@ -29,7 +29,7 @@ namespace KSharprTests
         {
             KSharpGrammarParser parser = CreaterParserFromInput(input);
 
-            ITree tree = parser.expression();
+            ITree tree = parser.start();
 
             return parser.NumberOfSyntaxErrors;
         }

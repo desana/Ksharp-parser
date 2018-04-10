@@ -10,12 +10,8 @@ options {
 
 // <-------------------------------- Parser rules ---------------------------------------->
 
-argument_list
-	: argument (COMMA argument)*
-	; 
-
-argument 
-	: (identifier COLON)? expression
+start
+	: expression?
 	;
 
 expression 
@@ -235,23 +231,21 @@ anonymous_function_body
 
 statement
 	: identifier COLON statement                                     #labeledStatement
-	| (local_variable_declaration) SEMICOLON?						 #declarationStatement
-	| embedded_statement                                             #embeddedStatement
+	| (local_variable_declaration)									 #declarationStatement
+	| embedded_statement				                             #embeddedStatement
+	| jump_statement												 #jumpStatement
 	;
 
 embedded_statement
-	: block
-	| simple_embedded_statement
-	;
+	: block													
+	| SEMICOLON                                                       
+	| expression
+	; 
 
-simple_embedded_statement
-	: SEMICOLON                                                       #emptyStatement
-	| expression SEMICOLON?                                           #expressionStatement
-
-    // jump statements
-	| BREAK SEMICOLON?                                                   #breakStatement
-	| CONTINUE SEMICOLON?												 #continueStatement
-	| RETURN conditional_expression? SEMICOLON?							 #returnStatement
+jump_statement
+	: BREAK                                                   
+	| CONTINUE 											 
+	| RETURN conditional_expression? 						 
 	;
 
 block
@@ -271,7 +265,7 @@ local_variable_initializer
 	;
 
 statement_list
-	: statement+
+	: (statement SEMICOLON?)+  
 	;
 
 for_initializer
@@ -323,6 +317,14 @@ method_member_name
 
 arg_declaration
 	: identifier (ASSIGN expression)?
+	;
+
+argument_list
+	: argument (COMMA argument)*
+	; 
+
+argument 
+	: (identifier COLON)? expression
 	;
 
 method_invocation
