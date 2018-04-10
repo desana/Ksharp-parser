@@ -76,7 +76,7 @@ namespace KSharprTests
 
 
             [TestCase(")", Description = "Unexpected token")]
-            [TestCase("{% () %}", Description = "No content in the brackets")]
+            [TestCase("()", Description = "No content in the brackets")]
             [TestCase("1 |+} 2 ", Description = "Invalid operator")]
             public void BasicStructures_NotSuccessful(string input)
             {

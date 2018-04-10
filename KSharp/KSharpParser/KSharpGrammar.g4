@@ -15,8 +15,7 @@ start
 	;
 
 expression 
-	: OPEN_BRACE expression CLOSE_BRACE
-	| assignment
+	: assignment
 	| non_assignment_expression
 	;
 
