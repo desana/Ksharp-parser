@@ -157,50 +157,6 @@ expression_list
 	: expression (COMMA expression)*
 	;
 
-object_or_collection_initializer
-	: object_initializer
-	| collection_initializer
-	;
-
-object_initializer
-	: OPEN_BRACE (member_initializer_list COMMA?)? CLOSE_BRACE
-	;
-
-member_initializer_list
-	: member_initializer (COMMA member_initializer)*
-	;
-
-member_initializer
-	: (identifier | OPEN_BRACKET expression CLOSE_BRACKET) ASSIGN initializer_value // C# 6
-	;
-
-initializer_value
-	: expression
-	| object_or_collection_initializer
-	;
-
-collection_initializer
-	: OPEN_BRACE element_initializer (COMMA element_initializer)* COMMA? CLOSE_BRACE
-	;
-
-element_initializer
-	: non_assignment_expression
-	| OPEN_BRACE expression_list CLOSE_BRACE
-	;
-
-anonymous_object_initializer
-	: OPEN_BRACE (member_declarator_list COMMA?)? CLOSE_BRACE
-	;
-
-member_declarator_list
-	: member_declarator ( COMMA member_declarator)*
-	;
-
-member_declarator
-	: primary_expression
-	| identifier ASSIGN expression
-	;
-
 lambda_expression
 	: anonymous_function_signature right_arrow anonymous_function_body
 	;
@@ -231,7 +187,6 @@ anonymous_function_body
 
 statement
 	: identifier COLON statement                                     #labeledStatement
-	| (local_variable_declaration)									 #declarationStatement
 	| embedded_statement				                             #embeddedStatement
 	| jump_statement												 #jumpStatement
 	;
@@ -252,25 +207,13 @@ block
 	: OPEN_BRACE statement_list? CLOSE_BRACE
 	;
 
-local_variable_declaration
-	: local_variable_declarator ( COMMA  local_variable_declarator)*
-	;
-
-local_variable_declarator
-	: identifier (ASSIGN local_variable_initializer)?
-	;
-
-local_variable_initializer
-	: expression
-	;
-
 statement_list
 	: (statement SEMICOLON?)+  
 	;
 
 for_initializer
-	: local_variable_declaration
-	| conditional_expression (COMMA  conditional_expression)*
+	: assignment
+	| identifier
 	;
 
 for_iterator
@@ -315,10 +258,6 @@ method_member_name
 	: (identifier | identifier DOUBLE_COLON identifier) (PERIOD identifier)*
 	;
 
-arg_declaration
-	: identifier (ASSIGN expression)?
-	;
-
 argument_list
 	: argument (COMMA argument)*
 	; 
@@ -329,10 +268,6 @@ argument
 
 method_invocation
 	: OPEN_PARENS argument_list? CLOSE_PARENS
-	;
-
-object_creation_expression
-	: OPEN_PARENS argument_list? CLOSE_PARENS object_or_collection_initializer?
 	;
 
 identifier

@@ -339,6 +339,8 @@ namespace KSharprTests
         {
             [TestCase("for (i=0; i<=5 ; i++) {i}")]
 
+            [TestCase("i = 3; for (i; i<=5 ; i++) {i}")]
+
             [TestCase("z = 0; for (i = 0; i < 5; i++) { z += 1 }; z")]
             [TestCase("z = 0; for (i = 0; i < 5; i++) { z += 1 } ")]
 
