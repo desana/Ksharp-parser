@@ -252,7 +252,6 @@ namespace KSharprTests
 
             [TestCase("if (!Condition) { return Value }")]
 
-            [TestCase("If (1==2) {\"A\"} else {\"B\"}")]
             [TestCase("If (1==2) {\"A\"} Else {\"B\"}")]
             [TestCase("if (1==2) {\"A\"} Else {\"B\"}")]
 
@@ -262,6 +261,7 @@ namespace KSharprTests
             [TestCase("if (15) { 1 } else { 0 }")]
             [TestCase("if (-15) { 1 } else { 0 }")]
             [TestCase("if (0) { 1 } else { 0 }")]
+            [TestCase("If (1==2) {\"A\"} else {\"B\"}")]
             public void If_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
