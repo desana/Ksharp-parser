@@ -491,7 +491,7 @@ namespace KSharprTests
         [TestFixture]        
         public class ParameterTests
         {
-            [TestCase("CurrentUser.UserDateOfBirth|(default)N|A")]
+            [TestCase("CurrentUser.UserDateOfBirth|(default)N\\|A")]
             [TestCase("ArticleSummary|(encode)true")]
             [TestCase("ArticleText|(encode)true|(recursive)true")]
             [TestCase("DocumentPublishFrom|(culture)en-us")]

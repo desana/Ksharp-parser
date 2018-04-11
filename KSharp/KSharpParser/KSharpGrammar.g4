@@ -11,7 +11,20 @@ options {
 // <-------------------------------- Parser rules ---------------------------------------->
 
 begin_expression
-	:  statement_list EOF
+	:  statement_list parameter* EOF
+	;
+
+parameter
+	: PIPE OPEN_PARENS parameter_name CLOSE_PARENS parameter_value?
+	;
+
+parameter_name
+	: IDENTIFIER
+	;
+
+parameter_value
+	: IDENTIFIER
+	| literal
 	;
 
 statement_list
@@ -106,19 +119,11 @@ conditional_or_expression
 	;
 
 conditional_and_expression
-	: inclusive_or_expression (AND inclusive_or_expression)*
+	: or_expression (AND or_expression)*
 	;
 
-inclusive_or_expression
-	: exclusive_or_expression (PIPE exclusive_or_expression)*
-	;
-
-exclusive_or_expression
-	: and_expression (CARET and_expression)*
-	;
-
-and_expression
-	: equality_expression (AMPERSAND equality_expression)*
+or_expression
+	: equality_expression (CARET equality_expression)*
 	;
 
 equality_expression
@@ -150,7 +155,6 @@ unary_expression
 	| WAVE_DASH unary_expression
 	| INC unary_expression
 	| DEC unary_expression
-	| AMPERSAND unary_expression
 	| MUL unary_expression
 	;
 
@@ -319,7 +323,6 @@ NOT_EQUAL:				 '!=';
 LEFT_SHIFT:				 '<<';
 PIPE:					 '|';
 WAVE_DASH:				 '~';
-AMPERSAND:				 '&';
  
 // <------- ASSIGNS ------->
 
