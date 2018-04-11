@@ -382,7 +382,7 @@ INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
 NEWLINE: ('\r\n'|'\n'|'\r')  -> channel(HIDDEN);
 WS	: ' ' -> channel(HIDDEN);
 
-COMMENT:  ( '//' .*?  | '/*' .*? '*/') -> channel(HIDDEN);
+COMMENT:  ( '//' .*? (NEWLINE | EOF) | '/*' .*? '*/') -> channel(HIDDEN);
 
  // <------- FRAGMENTS ------->
 

@@ -212,6 +212,8 @@ namespace KSharprTests
 
             [TestCase("\"String\" + \"AnotherString\"")]
             [TestCase("\"String\" - \"AnotherString\"")]
+            
+            [TestCase("\"String\" \"AnotherString\"")]
 
             [TestCase("Variable = \"String\" + \"AnotherString\"")]
 
