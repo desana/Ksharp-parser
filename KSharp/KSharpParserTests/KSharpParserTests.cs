@@ -222,6 +222,10 @@ namespace KSharprTests
             [TestCase("\"\" + 23.05")]
             [TestCase("\"\" + False")]
 
+            [TestCase("\"\"")]
+            [TestCase("\"\\\"\"")]
+            [TestCase("@\"\"")]
+
             [TestCase("@\"This string displays as is. No newlines\n, tabs\t or backslash-escapes\\.\"")]
             public void String_IsSuccessful(string input)
             {
@@ -579,18 +583,9 @@ namespace KSharprTests
             [TestCase("GetDocumentUrl()|(timeout)2000")]
             [TestCase("QueryString.Param|(handlesqlinjection)true")]
             [TestCase("Documents[\"/News\"].Children.WithAllData|(debug)true")]
-
-            [TestCase("if (true) { %}<br>{%}|(encode)false")]
-            [TestCase("if (true) { %}{%\"<br>\"%}{%}|(encode)false")]
-            [TestCase("if (true) { %}{%\"<br>\"|(encode)%}{%}|(encode)false")]
-            [TestCase("if (true) { %}{%\"<br>\"|(encode)false%}{%}|(encode)true")]
-            [TestCase("if (true) {%}<br>{%\"test\"%}test{%}|(encode)")]
-            [TestCase("if (true) {%}<br>{%\"test\"%}test{%}|(encode)false%}{%\"<br>\"")]
-
+            
             [TestCase("\"<br>\"|(encode)")]
             [TestCase("\"<br>\"|(encode)true")]
-
-            [TestCase("if (PrintThreadCulturesTest() == \"en-GB,en-GB\") { %}{% PrintThreadCUlturesTest()|(culture)ja-JP %}{% }")]
 
             [TestCase("\"resolved\"|(resolver)ExpectedResolverName")]
             [TestCase("\"resolved\"|(culture)en-gb")]
@@ -639,6 +634,15 @@ namespace KSharprTests
             [TestCase("for ( i = 0; i < 2; i++) { x = false; x ? \"yes\" : \"no\" }")]
             [TestCase("for ( i = 0; i < 2; i++) { %}{% x = (i mod 2) == 0; x ? \"yes\" : \"no\" %}testtext{% }")]
             [TestCase("for ( i = 0; i < 2; i++) {  %}{% i %}{% }")]
+            
+            [TestCase("if (true) { %}<br>{%}|(encode)false")]
+            [TestCase("if (true) { %}{%\"<br>\"%}{%}|(encode)false")]
+            [TestCase("if (true) { %}{%\"<br>\"|(encode)%}{%}|(encode)false")]
+            [TestCase("if (true) { %}{%\"<br>\"|(encode)false%}{%}|(encode)true")]
+            [TestCase("if (true) {%}<br>{%\"test\"%}test{%}|(encode)")]
+            [TestCase("if (true) {%}<br>{%\"test\"%}test{%}|(encode)false%}{%\"<br>\"")]
+
+            [TestCase("if (PrintThreadCulturesTest() == \"en-GB,en-GB\") { %}{% PrintThreadCUlturesTest()|(culture)ja-JP %}{% }")]
             public void OpenExpressions_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
@@ -647,7 +651,7 @@ namespace KSharprTests
 
 
         [TestFixture]
-        public class OtherTests
+        public class UncategorizedTests
         {
             [TestCase(@"
 Cache(a = true, 10, true, ""a"");
@@ -677,14 +681,8 @@ return c
             [TestCase("print(\"Console priority\") + \" works\"")]
             [TestCase("\"Simple string literal\"")]
             [TestCase("\"3.456\"")]
-            [TestCase("\"\"")]
-            [TestCase("\"\\\"\"")]
-            [TestCase("@\"\"")]
-
-
-
+                        
             [TestCase("2.48 + 0.02-- + ++2.0e-1;")]
-
    
             [TestCase("x[y[z]]")]
             [TestCase("if (x++) { a } else { z }")]
@@ -712,7 +710,7 @@ jak """" \n se mas""")]
             [TestCase("x ? \"yes\" : \"no\"")]
 
             [TestCase("((i mod 2) == 0)")]
-            public void Other_IsSuccessful(string input)
+            public void Uncategorized_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
