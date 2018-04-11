@@ -1,18 +1,15 @@
 version: 1.0.{build}
-
 branches:
   only:
   - master
-
 configuration: 
 - Debug
 - Release
-
 image: Visual Studio 2017
-
 before_build:
   - nuget restore ./KSharp/KSharp.sln
-
+ nuget:
+  project_feed: true
 build:
   verbosity: minimal
   publish_wap: true
