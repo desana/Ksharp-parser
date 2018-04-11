@@ -379,6 +379,8 @@ WS	: ' ' -> channel(HIDDEN);
 
 COMMENT:  ( '//' .*? (NEWLINE | EOF) | '/*' .*? '*/') -> channel(HIDDEN);
 
+INVALID_IDENTIFIER: [0-9]+ IdentifierOrKeyword -> channel(HIDDEN);
+
  // <------- FRAGMENTS ------->
 
 fragment InputCharacter:       ~[\r\n\u0085\u2028\u2029];

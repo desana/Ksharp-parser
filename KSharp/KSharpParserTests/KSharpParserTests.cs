@@ -66,13 +66,14 @@ namespace KSharprTests
             [TestCase(";;;")]
 
             [TestCase("\"String\"")]
+
+            // invalid identifier, it is ignored when found
+            [TestCase("2identifier")]
             public void BasicStructures_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
 
-
-            [TestCase("2identifier")]
 
             [TestCase(")", Description = "Unexpected token")]
             [TestCase("()", Description = "No content in the brackets")]
