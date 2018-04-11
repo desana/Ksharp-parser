@@ -19,7 +19,7 @@ statement_list
 	;
 
 statement
-	: identifier COLON statement                                     #labeledStatement
+	: IDENTIFIER COLON statement                                     #labeledStatement
 	| embedded_statement				                             #embeddedStatement
 	| jump_statement												 #jumpStatement
 	;
@@ -118,7 +118,7 @@ and_expression
 	;
 
 equality_expression
-	: relational_expression ((EQUAL | NOT_EQUAL)  relational_expression)*
+	: relational_expression ((EQUAL | NOT_EQUAL | EQUALS | NOT_EQUALS)  relational_expression)*
 	;
 
 relational_expression
@@ -156,13 +156,13 @@ primary_expression
 
 primary_expression_start
 	: literal                                   #literalExpression
-	| identifier								#simpleNameExpression
+	| IDENTIFIER								#simpleNameExpression
 	| OPEN_PARENS expression CLOSE_PARENS       #parenthesisExpressions	
 	| LITERAL_ACCESS                            #literalAccessExpression
 	;
 
 member_access
-	: QUESTION_MARK? PERIOD identifier
+	: QUESTION_MARK? PERIOD IDENTIFIER
 	;
 
 bracket_expression
@@ -170,7 +170,7 @@ bracket_expression
 	;
 
 indexer_argument
-	: (identifier COLON)? expression
+	: (IDENTIFIER COLON)? expression
 	;
 
 expression_list
@@ -185,7 +185,7 @@ anonymous_function_signature
 	: OPEN_PARENS CLOSE_PARENS
 	| OPEN_PARENS explicit_anonymous_function_parameter_list CLOSE_PARENS
 	| OPEN_PARENS implicit_anonymous_function_parameter_list CLOSE_PARENS
-	| identifier
+	| IDENTIFIER
 	;
 
 explicit_anonymous_function_parameter_list
@@ -193,11 +193,11 @@ explicit_anonymous_function_parameter_list
 	;
 
 explicit_anonymous_function_parameter
-	: identifier
+	: IDENTIFIER
 	;
 
 implicit_anonymous_function_parameter_list
-	: identifier (COMMA identifier)*
+	: IDENTIFIER (COMMA IDENTIFIER)*
 	;
 
 anonymous_function_body
@@ -211,7 +211,7 @@ block
 
 for_initializer
 	: assignment
-	| identifier
+	| IDENTIFIER
 	;
 
 for_iterator
@@ -257,7 +257,7 @@ string_literal
 
 // -------------------- extra rules for modularization --------------------------------
 method_member_name
-	: (identifier | identifier DOUBLE_COLON identifier) (PERIOD identifier)*
+	: (IDENTIFIER | IDENTIFIER DOUBLE_COLON IDENTIFIER) (PERIOD IDENTIFIER)*
 	;
 
 argument_list
@@ -265,18 +265,11 @@ argument_list
 	; 
 
 argument 
-	: (identifier COLON)? expression
+	: (IDENTIFIER COLON)? expression
 	;
 
 method_invocation
 	: OPEN_PARENS argument_list? CLOSE_PARENS
-	;
-
-identifier
-	: IDENTIFIER	
-	| EQUALS
-	| ORDERBY
-	| WHERE
 	;
 
  // <--------------------------- LEXER RULES ------------------------------->
@@ -284,20 +277,18 @@ identifier
 
 BREAK:					 'break';
 CONTINUE:				 'continue';
-DO:			   			 'do';
 ELSE:					 'else';
 EQUALS:					 'equals'; 
+NOT_EQUALS:				 'notequals'; 		
 FALSE:					 'false';
 FOR:					 'for';
 FOREACH:				 'foreach';
 IF:						 'if'; 
 IN:						 'in'; 
 NULL:					 'null';
-ORDERBY:				 'orderby';
-PARAMS:					 'params';	
+ORDERBY:				 'orderby';	
 RETURN:					 'return';
 TRUE:					 'true';
-WHERE:					 'where'; 
 WHILE:					 'while';
 
 // <-------  ------->
