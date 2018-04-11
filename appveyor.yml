@@ -6,7 +6,7 @@ configuration:
 - Debug
 - Release
 image: Visual Studio 2017
- nuget:
+nuget:
   project_feed: true
 before_build:
   - nuget restore ./KSharp/KSharp.sln
