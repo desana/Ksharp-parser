@@ -277,13 +277,13 @@ method_invocation
 
 BREAK:					 'break';
 CONTINUE:				 'continue';
-ELSE:					 'else';
+ELSE:					 'else'| 'Else' ; 
 EQUALS:					 'equals'; 
 NOT_EQUALS:				 'notequals'; 		
 FALSE:					 'false';
 FOR:					 'for';
 FOREACH:				 'foreach';
-IF:						 'if'; 
+IF:						 'if' | 'If' ; 
 IN:						 'in'; 
 NULL:					 'null';
 ORDERBY:				 'orderby';	

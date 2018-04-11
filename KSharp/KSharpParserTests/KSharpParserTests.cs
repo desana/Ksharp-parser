@@ -247,8 +247,9 @@ namespace KSharprTests
 
             [TestCase("if (!Condition) { return Value }")]
 
-            [TestCase(@"If (1==2) {""A""} else {""B""}")]
-            [TestCase(@"If (1==2) {""A""} Else {""B""}")]
+            [TestCase("If (1==2) {\"A\"} else {\"B\"}")]
+            [TestCase("If (1==2) {\"A\"} Else {\"B\"}")]
+            [TestCase("if (1==2) {\"A\"} Else {\"B\"}")]
 
             [TestCase("cond = \"should go through\"; if (cond) { 1 } else { 0 }")]
             [TestCase("cond = null; if (cond) { 1 } else { 0 }")]
@@ -706,6 +707,10 @@ return c
  * multiline */
 _id /* inline comment */ + _id2 + @""ahoj
 jak """" \n se mas""")]
+
+            [TestCase("x ? \"yes\" : \"no\"")]
+
+            [TestCase("((i mod 2) == 0)")]
             public void Other_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
