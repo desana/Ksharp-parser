@@ -1,4 +1,12 @@
-configuration: Debug
+version: 1.0.{build}
+
+branches:
+  only:
+  - master
+
+configuration: 
+- Debug
+- Release
 
 image: Visual Studio 2017
 
@@ -8,3 +16,7 @@ before_build:
 build:
   verbosity: minimal
   publish_wap: true
+  publish_nuget: true
+  publish_nuget_symbols: true
+  include_nuget_references: true
+  parallel: true
