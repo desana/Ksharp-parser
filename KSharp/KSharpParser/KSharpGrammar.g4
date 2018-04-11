@@ -41,9 +41,13 @@ expression
 	| non_assignment_expression
 	;
 
-non_assignment_expression 
+assignable_expression
 	: lambda_expression
 	| conditional_expression
+	;
+
+non_assignment_expression 
+	: assignable_expression
 	| if_expression  
 	| loop_expression
 	;
@@ -71,7 +75,7 @@ if_expression
 	; 
 
 assignment 
-	: IDENTIFIER assignment_operator conditional_expression
+	: IDENTIFIER assignment_operator assignable_expression
 	;
 
 assignment_operator
