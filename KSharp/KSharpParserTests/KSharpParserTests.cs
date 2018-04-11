@@ -486,95 +486,11 @@ namespace KSharprTests
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
         }
-
-
-        [TestFixture]
-        public class MiscTests { 
-
-            [TestCase("foreach (page in CurrentDocument.CultureVersions) {if (page.DocumentCulture != CurrentDocument.DocumentCulture) {\"<link rel=\"alternate\" href=\"\"+ page.AbsoluteUrl + \"\" hreflang=\"\"+ page.DocumentCulture +\"\"/>\";}}")]
-            
-            // Todo: categorize
-            [TestCase("\"string\" + 5")]
-            [TestCase("ResolveBBCode(\"[quote]Sample text[/ quote]\")")]
-            [TestCase("FormatPrice(GetSKUTax(SKUID), false)")]
-
-            [TestCase("CurrentPageInfo.DocumentPageTitle + \" | suffix\"")]
-            [TestCase("CurrentDocument.Children.FirstItem ?? \"No child pages\"")]
-            [TestCase("50 == 5*10")]
-            [TestCase("CurrentUser.UserName != \"administrator\"")]
-            [TestCase("CurrentPageInfo.DocumentPublishFrom <= DateTime.Now")]            
-            
-
-            [TestCase("Replace(\"The sky is blue on blue planets\", \"blue\", \"red\")")]
-            [TestCase("\"The sky is blue on blue planets\".Replace(\"blue\", \"red\")")]
-
-            [TestCase("\"word\".ToUpper()")]
-            [TestCase("ToUpper(\"word\")")]
-
-            [TestCase("for (i=0; i<=5 ; i++) {if (i == 3) {continue}; i}")]
-
-            [TestCase("x = 5; x + 7")]
-            [TestCase("x = 5; y = 3; x += 2; x + y")]
-            [TestCase("z = 1; if (z<3) {\"z is less than 3\"}")]
-            [TestCase("z = 5; if (z < 3) {\"z is less than 3\"} else {\"z is greater than or equal to 3\"}")]
-            [TestCase("x=1; y=2; x > y ? \"The first parameter is greater\" : \"The second parameter is greater\"")]
-
-            [TestCase("orders = ECommerceContext.CurrentCustomer.AllOrders; if (orders.Count > 0) {print(\"<ul>\"); foreach (order in orders) { foreach (item in order.OrderItems) { print(\"<li>\" + item.OrderItemSKUName + \"</li>\") }}; print(\"</ul>\");}")]
-            [TestCase("orders = ECommerceContext.CurrentCustomer.AllOrders; if (orders.Count > 0) { result = \"<ul>\"; foreach (order in orders) { foreach (item in order.OrderItems) { result += \"<li>\" + item.OrderItemSKUName + \"</li>\" } }; return result + \"</ul>\";}")]
-
-            [TestCase("\"red\"; \"yellow\"; return \"green\"; \"blue\"")]
-            [TestCase("z = \"\"; foreach (x in \"hello\") {return \"ignore the loop\"; z += x }")]
-
-            [TestCase("\"hello\"[1]")]
-            [TestCase("dataRow[\"FirstName\"]")]
-
-            [TestCase("Cache(\"string\".ToUpper())")]
-            [TestCase("Cache(CurrentUser.GetFormattedUserName(), 5, true, \"username|\" + CurrentUser.UserName, GetCacheDependency(\"cms.user|all\"))")]
-            [TestCase("\"String1\".ConnectStrings(\"String2\")")]
-            [TestCase("ConnectStrings(\"String1\", \"String2\")")]
-            [TestCase("String.ConnectStrings(\"First part\", \"Second part\")")]
-            [TestCase("CurrentDocument.GetValue(\"NewsTitle\")")]
-            [TestCase("CurrentDocument.GetProperty(\"NewsTitle\")")]
-            [TestCase("GlobalObjects.Users.GetItem(0).UserName")]
-            [TestCase("GlobalObjects.Users.OrderBy(\"UserCreated DESC\").FirstItem.UserNameUser")]
-            [TestCase("GlobalObjects.Users.Where(\"Email LIKE '%@localhost.local'\").FirstItem.UserName")]
-            [TestCase("GlobalObjects.Users.TopN(1).FirstItem.UserName ")]
-            [TestCase("GlobalObjects.Users.Columns(\"UserName, Email\").FirstItem.UserName")]
-            [TestCase("GlobalObjects.Users.Filter(UserID == 53).FirstItem.UserName")]
-            [TestCase("Documents.ClassNames(\"cms.menuitem;cms.news\").Count")]
-            [TestCase("CurrentDocument.ClassName.InList(\"cms.menuitem, cms.root\".Split(\", \"))")]
-            [TestCase("GlobalObjects.Users.All(UserEnabled == true)")]
-            [TestCase("GlobalObjects.Users.Any(UserEnabled == false)")]
-            [TestCase("GlobalObjects.Users.Exists(UserEnabled == false)")]
-            [TestCase("GlobalObjects.Users.RandomSelection().UserName")]
-            [TestCase("Documents.SelectInterval(0,9)")]
-
-            [TestCase("DocumentName.ToString()")]
-            [TestCase("DocumentName.ToString(\"defaultValue\")")]
-            [TestCase("DocumentName.ToString(\"defaultValue\", \"en - US\")")]
-            [TestCase("DocumentName.ToString( \"defaultValue\", DocumentCulture, \"Document name is: {0}\")")]
-            [TestCase("DocumentID.ToInt()")]
-            [TestCase("DocumentShowInSiteMap.ToBool()")]
-            [TestCase("DocumentID.ToDecimal()")]
-            [TestCase("DocumentID.ToDecimal(\"0.0\", DocumentCulture)")]
-            [TestCase("DocumentID.ToDouble()")]
-            [TestCase("DocumentID.ToDouble(\"0.0\", DocumentCulture)")]
-            [TestCase("DocumentGUID.ToGuid()")]
-            [TestCase("CurrentUser.ToBaseInfo()")]
-            [TestCase("List(\"Apple\", \"Orange\", \"Banana\")")]
-                        
-            public void Misc_IsSuccessful(string input)
-            {
-                Assert.AreEqual(0, GetParsingErrors(input));
-            }
-        }
-
+                
 
         [TestFixture]        
-        public class PipeTests
+        public class ParameterTests
         {
-            [Ignore("Not going to do that here")]
-
             [TestCase("CurrentUser.UserDateOfBirth|(default)N|A")]
             [TestCase("ArticleSummary|(encode)true")]
             [TestCase("ArticleText|(encode)true|(recursive)true")]
@@ -599,7 +515,7 @@ namespace KSharprTests
             [TestCase("\"resolved\"|(encode)true")]
             [TestCase("\"resolved\"|(encode)")]
             [TestCase("\"resolved\"|(timeout)123456")]
-            public void Pipe_IsSuccessful(string input)
+            public void Parameter_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
@@ -623,7 +539,7 @@ namespace KSharprTests
         [TestFixture]
         public class OpenExpressionsTests
         {
-            [Ignore("Need to think about this")]
+            [Ignore("Is handled on a higher level")]
             [TestCase("for (i = 1; i <= 3; i++) { %}{% i %} {% }")]
             [TestCase("foreach (i in array) { %}{% i %} {% }")]
             [TestCase("foreach (i in array) { %}{% i %}-{% foreach (j in array) { %}{% j %}{% } %} {% }")]
@@ -710,6 +626,78 @@ jak """" \n se mas""")]
             [TestCase("x ? \"yes\" : \"no\"")]
 
             [TestCase("((i mod 2) == 0)")]
+
+            [TestCase("foreach (page in CurrentDocument.CultureVersions) {if (page.DocumentCulture != CurrentDocument.DocumentCulture) {\"<link rel=\"alternate\" href=\"\"+ page.AbsoluteUrl + \"\" hreflang=\"\"+ page.DocumentCulture +\"\"/>\";}}")]
+
+            [TestCase("\"string\" + 5")]
+            [TestCase("ResolveBBCode(\"[quote]Sample text[/ quote]\")")]
+            [TestCase("FormatPrice(GetSKUTax(SKUID), false)")]
+
+            [TestCase("CurrentPageInfo.DocumentPageTitle + \" | suffix\"")]
+            [TestCase("CurrentDocument.Children.FirstItem ?? \"No child pages\"")]
+            [TestCase("50 == 5*10")]
+            [TestCase("CurrentUser.UserName != \"administrator\"")]
+            [TestCase("CurrentPageInfo.DocumentPublishFrom <= DateTime.Now")]
+
+
+            [TestCase("Replace(\"The sky is blue on blue planets\", \"blue\", \"red\")")]
+            [TestCase("\"The sky is blue on blue planets\".Replace(\"blue\", \"red\")")]
+
+            [TestCase("\"word\".ToUpper()")]
+            [TestCase("ToUpper(\"word\")")]
+
+            [TestCase("for (i=0; i<=5 ; i++) {if (i == 3) {continue}; i}")]
+
+            [TestCase("x = 5; x + 7")]
+            [TestCase("x = 5; y = 3; x += 2; x + y")]
+            [TestCase("z = 1; if (z<3) {\"z is less than 3\"}")]
+            [TestCase("z = 5; if (z < 3) {\"z is less than 3\"} else {\"z is greater than or equal to 3\"}")]
+            [TestCase("x=1; y=2; x > y ? \"The first parameter is greater\" : \"The second parameter is greater\"")]
+
+            [TestCase("orders = ECommerceContext.CurrentCustomer.AllOrders; if (orders.Count > 0) {print(\"<ul>\"); foreach (order in orders) { foreach (item in order.OrderItems) { print(\"<li>\" + item.OrderItemSKUName + \"</li>\") }}; print(\"</ul>\");}")]
+            [TestCase("orders = ECommerceContext.CurrentCustomer.AllOrders; if (orders.Count > 0) { result = \"<ul>\"; foreach (order in orders) { foreach (item in order.OrderItems) { result += \"<li>\" + item.OrderItemSKUName + \"</li>\" } }; return result + \"</ul>\";}")]
+
+            [TestCase("\"red\"; \"yellow\"; return \"green\"; \"blue\"")]
+            [TestCase("z = \"\"; foreach (x in \"hello\") {return \"ignore the loop\"; z += x }")]
+
+            [TestCase("\"hello\"[1]")]
+            [TestCase("dataRow[\"FirstName\"]")]
+
+            [TestCase("Cache(\"string\".ToUpper())")]
+            [TestCase("Cache(CurrentUser.GetFormattedUserName(), 5, true, \"username|\" + CurrentUser.UserName, GetCacheDependency(\"cms.user|all\"))")]
+            [TestCase("\"String1\".ConnectStrings(\"String2\")")]
+            [TestCase("ConnectStrings(\"String1\", \"String2\")")]
+            [TestCase("String.ConnectStrings(\"First part\", \"Second part\")")]
+            [TestCase("CurrentDocument.GetValue(\"NewsTitle\")")]
+            [TestCase("CurrentDocument.GetProperty(\"NewsTitle\")")]
+            [TestCase("GlobalObjects.Users.GetItem(0).UserName")]
+            [TestCase("GlobalObjects.Users.OrderBy(\"UserCreated DESC\").FirstItem.UserNameUser")]
+            [TestCase("GlobalObjects.Users.Where(\"Email LIKE '%@localhost.local'\").FirstItem.UserName")]
+            [TestCase("GlobalObjects.Users.TopN(1).FirstItem.UserName ")]
+            [TestCase("GlobalObjects.Users.Columns(\"UserName, Email\").FirstItem.UserName")]
+            [TestCase("GlobalObjects.Users.Filter(UserID == 53).FirstItem.UserName")]
+            [TestCase("Documents.ClassNames(\"cms.menuitem;cms.news\").Count")]
+            [TestCase("CurrentDocument.ClassName.InList(\"cms.menuitem, cms.root\".Split(\", \"))")]
+            [TestCase("GlobalObjects.Users.All(UserEnabled == true)")]
+            [TestCase("GlobalObjects.Users.Any(UserEnabled == false)")]
+            [TestCase("GlobalObjects.Users.Exists(UserEnabled == false)")]
+            [TestCase("GlobalObjects.Users.RandomSelection().UserName")]
+            [TestCase("Documents.SelectInterval(0,9)")]
+
+            [TestCase("DocumentName.ToString()")]
+            [TestCase("DocumentName.ToString(\"defaultValue\")")]
+            [TestCase("DocumentName.ToString(\"defaultValue\", \"en - US\")")]
+            [TestCase("DocumentName.ToString( \"defaultValue\", DocumentCulture, \"Document name is: {0}\")")]
+            [TestCase("DocumentID.ToInt()")]
+            [TestCase("DocumentShowInSiteMap.ToBool()")]
+            [TestCase("DocumentID.ToDecimal()")]
+            [TestCase("DocumentID.ToDecimal(\"0.0\", DocumentCulture)")]
+            [TestCase("DocumentID.ToDouble()")]
+            [TestCase("DocumentID.ToDouble(\"0.0\", DocumentCulture)")]
+            [TestCase("DocumentGUID.ToGuid()")]
+            [TestCase("CurrentUser.ToBaseInfo()")]
+            [TestCase("List(\"Apple\", \"Orange\", \"Banana\")")]
+
             public void Uncategorized_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
