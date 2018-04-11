@@ -10,7 +10,7 @@ options {
 
 // <-------------------------------- Parser rules ---------------------------------------->
 
-start
+start_parsing
 	: expression?
 	;
 
@@ -376,7 +376,7 @@ REGULAR_STRING:                      '"'  (~["\\\r\n\u0085\u2028\u2029] | Common
 VERBATIUM_STRING:                    '@"' (~'"' | '""')* '"';
 LITERAL_ACCESS:			 [0-9]+ IntegerTypeSuffix? '.' '@'? IdentifierOrKeyword;
 
-REAL_LITERAL:            [0-9]* '.' [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([FfDdMm] | ExponentPart [FfDdMm]?);
+REAL_LITERAL:            [0-9]* ( '.' | ',' ) [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([FfDdMm] | ExponentPart [FfDdMm]?);
 INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
 
 //Stop

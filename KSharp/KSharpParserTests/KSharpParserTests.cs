@@ -29,7 +29,7 @@ namespace KSharprTests
         {
             KSharpGrammarParser parser = CreaterParserFromInput(input);
 
-            ITree tree = parser.start();
+            ITree tree = parser.start_parsing();
 
             return parser.NumberOfSyntaxErrors;
         }
@@ -58,7 +58,6 @@ namespace KSharprTests
             [TestCase("3,465")]
 
             [TestCase("identifier")]
-            [TestCase("2identifier")]
             [TestCase("指")]
 
             [TestCase("30%")]
@@ -72,6 +71,8 @@ namespace KSharprTests
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
 
+
+            [TestCase("2identifier")]
 
             [TestCase(")", Description = "Unexpected token")]
             [TestCase("()", Description = "No content in the brackets")]
@@ -217,6 +218,8 @@ namespace KSharprTests
             [TestCase("\"\" + \"ahoj\"")]
             [TestCase("\"\" + 23.05")]
             [TestCase("\"\" + False")]
+
+            [TestCase("@\"This string displays as is. No newlines\n, tabs\t or backslash-escapes\\.\"")]
             public void String_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
