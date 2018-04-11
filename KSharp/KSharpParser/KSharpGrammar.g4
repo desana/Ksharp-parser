@@ -25,6 +25,8 @@ parameter_name
 parameter_value
 	: IDENTIFIER
 	| literal
+	| CULTURE_CODE
+	| NOT_SPECIFIED
 	;
 
 statement_list
@@ -294,6 +296,7 @@ FOREACH:				 F O R E A C H;
 IF:						 I F; 
 IN:						 I N; 
 MOD:					 M O D;
+NOT_SPECIFIED:           N '\\' '|' A;
 NULL:					 N U L L;
 RETURN:					 R E T U R N;
 TRUE:					 T R U E;
@@ -375,6 +378,8 @@ LITERAL_ACCESS:			 [0-9]+ IntegerTypeSuffix? '.' '@'? IdentifierOrKeyword;
 
 REAL_LITERAL:            [0-9]* ( '.' | ',' ) [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([FfDdMm] | ExponentPart [FfDdMm]?);
 INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
+
+CULTURE_CODE:            ([A-Z] | [a-z]) ([A-Z] | [a-z]) '-' ([A-Z] | [a-z]) ([A-Z] | [a-z]); 
 
 //Stop
 NEWLINE: ('\r\n'|'\n'|'\r')  -> channel(HIDDEN);
