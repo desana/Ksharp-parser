@@ -10,11 +10,11 @@ options {
 
 // <-------------------------------- Parser rules ---------------------------------------->
 
-start_parsing
-	: expression?
+begin_expression
+	:  statement_list EOF
 	;
 
-expression 
+expression
 	: assignment
 	| non_assignment_expression
 	;
@@ -128,15 +128,14 @@ unary_expression
 	| MUL unary_expression
 	;
 
-primary_expression  // Null-conditional operators C# 6: https://msdn.microsoft.com/en-us/library/dn986595.aspx
-	: pe=primary_expression_start bracket_expression*
-	  ((member_access | method_invocation | INC | DEC | POINTER identifier) bracket_expression*)*
+primary_expression  
+	: pe=primary_expression_start bracket_expression* ((member_access | method_invocation | INC | DEC) bracket_expression*)*
 	;
 
 primary_expression_start
 	: literal                                   #literalExpression
 	| identifier								#simpleNameExpression
-	| OPEN_PARENS expression CLOSE_PARENS       #parenthesisExpressions
+	| OPEN_PARENS expression CLOSE_PARENS       #parenthesisExpressions	
 	| LITERAL_ACCESS                            #literalAccessExpression
 	;
 
@@ -207,7 +206,7 @@ block
 	;
 
 statement_list
-	: (statement SEMICOLON?)+  
+	: (statement SEMICOLON?)*  
 	;
 
 for_initializer

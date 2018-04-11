@@ -27,14 +27,14 @@ namespace KSharpParser
         }
         private void RunParser()
         {
-            AntlrInputStream inputStream = new AntlrInputStream("2identifier");
+            AntlrInputStream inputStream = new AntlrInputStream("// This is a one-line comment. Initiated by two forward slashes, spans across one full line.");
             KSharpGrammarLexer lexer = new KSharpGrammarLexer(inputStream);
            
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
             commonTokenStream.Fill();
             var tokens = commonTokenStream.GetTokens();
             KSharpGrammarParser parser = new KSharpGrammarParser(commonTokenStream);
-            IParseTree tree = parser.start_parsing();
+            IParseTree tree = parser.begin_expression();
             IParseTreeVisitor<object> visitor = new KSharpGrammarBaseVisitor<object>();
             var result = visitor.Visit(tree);
             Console.WriteLine(tree.ToStringTree(parser));

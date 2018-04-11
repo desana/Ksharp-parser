@@ -29,7 +29,7 @@ namespace KSharprTests
         {
             KSharpGrammarParser parser = CreaterParserFromInput(input);
 
-            ITree tree = parser.start_parsing();
+            ITree tree = parser.begin_expression();
 
             return parser.NumberOfSyntaxErrors;
         }
@@ -340,6 +340,8 @@ namespace KSharprTests
         public class ForTests
         {
             [TestCase("for (i=0; i<=5 ; i++) {i}")]
+
+            [TestCase("for (i=0; i<=5 ; i++) {i;i;}")]
 
             [TestCase("i = 3; for (i; i<=5 ; i++) {i}")]
 
