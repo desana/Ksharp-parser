@@ -246,7 +246,7 @@ literal
 	;
 
 percent_literal
-	: INTEGER_LITERAL MOD
+	: INTEGER_LITERAL PERCENT_SIGN
 	;
 
 boolean_literal
@@ -289,6 +289,7 @@ FOR:					 F O R;
 FOREACH:				 F O R E A C H;
 IF:						 I F; 
 IN:						 I N; 
+MOD:					 M O D;
 NULL:					 N U L L;
 RETURN:					 R E T U R N;
 TRUE:					 T R U E;
@@ -347,7 +348,6 @@ PLUS:					 '+';
 MINUS:					 '-';
 MUL:					 '*';
 DIV:					 '/';
-MOD:					 '%';
 
 // <------- PARANTHESES ------->
 
@@ -361,6 +361,7 @@ CLOSE_BRACE:			 '}';
  // <------- OTHER ------->
 SLASH:					 '/';
 ASTERISK:				 '*';
+PERCENT_SIGN:			 '%';
 IDENTIFIER:				 '@'? IdentifierOrKeyword;
 
 HEX_INTEGER_LITERAL:     [0-9]; 
