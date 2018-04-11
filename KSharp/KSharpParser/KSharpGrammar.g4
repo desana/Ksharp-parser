@@ -14,6 +14,28 @@ begin_expression
 	:  statement_list EOF
 	;
 
+statement_list
+	: (statement SEMICOLON?)*  
+	;
+
+statement
+	: identifier COLON statement                                     #labeledStatement
+	| embedded_statement				                             #embeddedStatement
+	| jump_statement												 #jumpStatement
+	;
+
+embedded_statement
+	: block													
+	| SEMICOLON                                                       
+	| expression
+	; 
+
+jump_statement
+	: BREAK                                                   
+	| CONTINUE 											 
+	| RETURN conditional_expression? 						 
+	;
+
 expression
 	: assignment
 	| non_assignment_expression
@@ -183,30 +205,8 @@ anonymous_function_body
 	| block
 	;
 
-statement
-	: identifier COLON statement                                     #labeledStatement
-	| embedded_statement				                             #embeddedStatement
-	| jump_statement												 #jumpStatement
-	;
-
-embedded_statement
-	: block													
-	| SEMICOLON                                                       
-	| expression
-	; 
-
-jump_statement
-	: BREAK                                                   
-	| CONTINUE 											 
-	| RETURN conditional_expression? 						 
-	;
-
 block
-	: OPEN_BRACE statement_list? CLOSE_BRACE
-	;
-
-statement_list
-	: (statement SEMICOLON?)*  
+	: OPEN_BRACE statement_list CLOSE_BRACE
 	;
 
 for_initializer
@@ -382,7 +382,7 @@ INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
 NEWLINE: ('\r\n'|'\n'|'\r')  -> channel(HIDDEN);
 WS	: ' ' -> channel(HIDDEN);
 
-COMMENT:  ( '//' .*? 	| '/*' .*? '*/') -> channel(HIDDEN);
+COMMENT:  ( '//' .*?  | '/*' .*? '*/') -> channel(HIDDEN);
 
  // <------- FRAGMENTS ------->
 
