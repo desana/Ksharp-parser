@@ -3,7 +3,6 @@ branches:
   only:
   - master
 configuration: 
-- Debug
 - Release
 image: Visual Studio 2017
 nuget:
