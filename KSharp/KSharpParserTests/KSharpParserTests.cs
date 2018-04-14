@@ -337,6 +337,8 @@ namespace KSharprTests
 
             [TestCase("lambda = x => x * 2; lambda(lambda(5))")]
             [TestCase("lambda = (x, y, z) => x * y + z; lambda(5, 4, 3)")]
+
+            [TestCase("fun = (x => {if (x>1){\"Hello\"}}); fun(5);")]
             public void Lambda_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
@@ -698,6 +700,7 @@ jak """" \n se mas""")]
             [TestCase("CurrentUser.ToBaseInfo()")]
             [TestCase("List(\"Apple\", \"Orange\", \"Banana\")")]
 
+            [TestCase("(1>20) ? \"lol\" : {if (5>1){\"Hello\"}};")]
             public void Uncategorized_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));

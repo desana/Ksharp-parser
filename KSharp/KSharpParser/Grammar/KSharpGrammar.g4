@@ -113,7 +113,7 @@ assignment_operator
 	;
 
 conditional_expression
-	: null_coalescing_expression (QUESTION_MARK expression COLON expression)?
+	: null_coalescing_expression (QUESTION_MARK embedded_statement COLON embedded_statement)?
 	;
 
 null_coalescing_expression
