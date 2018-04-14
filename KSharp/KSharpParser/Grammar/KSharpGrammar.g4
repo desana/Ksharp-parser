@@ -171,11 +171,11 @@ primary_expression
 primary_expression_start
 	: literal                               
 	| IDENTIFIER								
-	| parenthesis_expression     
+	| parentheses_expression     
 	| LITERAL_ACCESS                          
 	;
 
-parenthesis_expression
+parentheses_expression
 	: OPEN_PARENS expression CLOSE_PARENS
 	;
 
@@ -363,7 +363,7 @@ MINUS:					 '-';
 MUL:					 '*';
 DIV:					 '/';
 
-// <------- PARANTHESES ------->
+// <------- PARENTHESES ------->
 
 OPEN_BRACKET:            '[';
 CLOSE_BRACKET:           ']';
