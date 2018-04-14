@@ -34,9 +34,13 @@ statement_list
 	;
 
 statement
-	: IDENTIFIER COLON statement                                     #labeledStatement
-	| embedded_statement				                             #embeddedStatement
-	| jump_statement												 #jumpStatement
+	: labeled_statement
+	| embedded_statement				                             
+	| jump_statement												 
+	;
+
+labeled_statement
+	: IDENTIFIER COLON statement 
 	;
 
 embedded_statement
@@ -165,10 +169,14 @@ primary_expression
 	;
 
 primary_expression_start
-	: literal                                   #literalExpression
-	| IDENTIFIER								#simpleNameExpression
-	| OPEN_PARENS expression CLOSE_PARENS       #parenthesisExpressions	
-	| LITERAL_ACCESS                            #literalAccessExpression
+	: literal                               
+	| IDENTIFIER								
+	| parenthesis_expression     
+	| LITERAL_ACCESS                          
+	;
+
+parenthesis_expression
+	: OPEN_PARENS expression CLOSE_PARENS
 	;
 
 member_access

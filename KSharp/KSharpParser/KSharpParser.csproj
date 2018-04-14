@@ -50,12 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Integration\INodeEvaluator.cs" />
+    <Compile Include="Integration\KSharpVisitor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Antlr4 Include="KSharpGrammar.g4">
+    <Antlr4 Include="Grammar\KSharpGrammar.g4">
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>KSharpParser</CustomToolNamespace>
       <Listener>False</Listener>
