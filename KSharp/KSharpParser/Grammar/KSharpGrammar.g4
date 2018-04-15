@@ -141,7 +141,7 @@ relational_expression
 	;
 
 shift_expression
-	: additive_expression (('<<' | right_shift)  additive_expression)*
+	: additive_expression ((LEFT_SHIFT | right_shift)  additive_expression)*
 	;
 
 additive_expression
