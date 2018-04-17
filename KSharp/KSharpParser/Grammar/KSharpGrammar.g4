@@ -107,7 +107,6 @@ assignment_operator
 	| AND_ASSIGN
 	| OR_ASSIGN
 	| XOR_ASSIGN
-	| LEFT_SHIFT
 	| LEFT_SHIFT_ASSIGN
 	| right_shift_assignment
 	;
