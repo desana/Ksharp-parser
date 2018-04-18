@@ -152,8 +152,7 @@ multiplicative_expression
 	;
 
 unary_expression
-    : INTEGER_LITERAL MUL                         
-	| primary_expression
+	: primary_expression
 	| PLUS unary_expression
 	| MINUS unary_expression
 	| BANG unary_expression
