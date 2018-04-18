@@ -61,7 +61,8 @@ namespace KSharprTests
             [TestCase("指")]
 
             [TestCase("30%")]
-                        
+            [TestCase("30.4%")]
+
             [TestCase(";")]
             [TestCase(";;;")]
 

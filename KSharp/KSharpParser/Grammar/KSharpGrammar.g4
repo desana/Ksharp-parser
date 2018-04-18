@@ -132,7 +132,7 @@ or_expression
 	;
 
 equality_expression
-	: relational_expression ((EQUAL | NOT_EQUAL | EQUALS | NOT_EQUALS)  relational_expression)*
+	: relational_expression ((EQUAL | NOT_EQUAL)  relational_expression)*
 	;
 
 relational_expression
@@ -251,15 +251,15 @@ literal
 	: boolean_literal
 	| string_literal
 	| percent_literal
-	| INTEGER_LITERAL
-	| HEX_INTEGER_LITERAL
+	| INTEGER_LITERAL 
 	| REAL_LITERAL
 	| CHARACTER_LITERAL
 	| NULL	  
 	;
 
 percent_literal
-	: INTEGER_LITERAL PERCENT_SIGN
+	: REAL_LITERAL PERCENT_SIGN
+    | INTEGER_LITERAL PERCENT_SIGN
 	;
 
 boolean_literal
@@ -292,11 +292,12 @@ method_invocation
  // <--------------------------- LEXER RULES ------------------------------->
  // <------- KEYWORDS ------->
 
+AND:					 A N D | '&&';
 BREAK:					 B R E A K;
 CONTINUE:				 C O N T I N U E;
 ELSE:					 E L S E; 
-EQUALS:					 E Q U A L S;
-NOT_EQUALS:				 N O T E Q U A L S; 		
+EQUAL:					 E Q U A L S | '==';
+NOT_EQUAL:				 N O T E Q U A L S | '!='; 		
 FALSE:					 F A L S E;
 FOR:					 F O R;
 FOREACH:				 F O R E A C H;
@@ -305,6 +306,7 @@ IN:						 I N;
 MOD:					 M O D;
 NOT_SPECIFIED:           N '\\' '|' A;
 NULL:					 N U L L;
+OR:						 O R | '||';
 RETURN:					 R E T U R N;
 TRUE:					 T R U E;
 WHILE:					 W H I L E;
@@ -328,8 +330,6 @@ POINTER:                 '->';
 
 LOWER_EQUAL :			 '<=';
 HIGHER_EQUAL :			 '>=';
-EQUAL:					 '==';
-NOT_EQUAL:				 '!=';
 LEFT_SHIFT:				 '<<';
 PIPE:					 '|';
 WAVE_DASH:				 '~';
@@ -346,11 +346,6 @@ OR_ASSIGN:				 '|=';
 XOR_ASSIGN:				 '^=';
 LEFT_SHIFT_ASSIGN:		 '<<=';
 ASSIGN:					 '=';
-
-// <------- LOGICAL ------->
-
-AND:					 '&&';
-OR:						 '||';
 
 // <------- MATHEMATICAL ------->
 
@@ -377,7 +372,6 @@ ASTERISK:				 '*';
 PERCENT_SIGN:			 '%';
 IDENTIFIER:				 '@'? IdentifierOrKeyword;
 
-HEX_INTEGER_LITERAL:     [0-9]; 
 CHARACTER_LITERAL:	     [0-9] | [A-F] | [a-f];
 REGULAR_STRING:                      '"'  (~["\\\r\n\u0085\u2028\u2029] | CommonCharacter)* '"';
 VERBATIUM_STRING:                    '@"' (~'"' | '""')* '"';
