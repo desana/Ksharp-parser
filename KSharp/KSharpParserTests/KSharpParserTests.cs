@@ -90,7 +90,7 @@ namespace KSharprTests
         public class LogicalTests
         {
             [TestCase("1 < 2")]
-            
+
             [TestCase("true || true")]
             [TestCase("false || false")]
             [TestCase("false || true")]
@@ -99,6 +99,10 @@ namespace KSharprTests
             [TestCase("false && false")]
             [TestCase("false && true")]
             [TestCase("true && false")]
+            
+            [TestCase("true or false")]
+
+            [TestCase("true and false")]
 
             [TestCase("null == 0 || null == null")]
             [TestCase("0 == 0 || 0 == null")]

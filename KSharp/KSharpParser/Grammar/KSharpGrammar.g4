@@ -295,9 +295,7 @@ method_invocation
 AND:					 A N D | '&&';
 BREAK:					 B R E A K;
 CONTINUE:				 C O N T I N U E;
-ELSE:					 E L S E; 
-EQUAL:					 E Q U A L S | '==';
-NOT_EQUAL:				 N O T E Q U A L S | '!='; 		
+ELSE:					 E L S E; 	
 FALSE:					 F A L S E;
 FOR:					 F O R;
 FOREACH:				 F O R E A C H;
@@ -312,6 +310,8 @@ TRUE:					 T R U E;
 WHILE:					 W H I L E;
 
 // <-------  ------->
+EQUAL:					 '==';
+NOT_EQUAL:				 '!='; 	
 
 DOUBLE_QUESTION_MARK:    '??'; 
 QUESTION_MARK:			 '?';
