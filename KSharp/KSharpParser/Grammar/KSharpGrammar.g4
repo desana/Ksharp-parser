@@ -159,7 +159,6 @@ unary_expression
 	| WAVE_DASH unary_expression
 	| INC unary_expression
 	| DEC unary_expression
-	| MUL unary_expression
 	;
 
 primary_expression  
@@ -384,6 +383,8 @@ CULTURE_CODE:            ([A-Z] | [a-z]) ([A-Z] | [a-z]) '-' ([A-Z] | [a-z]) ([A
 //Stop
 NEWLINE: ('\r\n'|'\n'|'\r')  -> channel(HIDDEN);
 WS	: ' ' -> channel(HIDDEN);
+
+EMPTY_STRING : '""' -> channel(HIDDEN);
 
 COMMENT:  ( '//' .*? (NEWLINE | EOF) | '/*' .*? '*/') -> channel(HIDDEN);
 
