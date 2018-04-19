@@ -52,7 +52,7 @@ embedded_statement
 jump_statement
 	: BREAK                                                   
 	| CONTINUE 											 
-	| RETURN conditional_expression? 						 
+	| RETURN ternary_expression? 						 
 	;
 
 expression
@@ -62,7 +62,7 @@ expression
 
 assignable_expression
 	: lambda_expression
-	| conditional_expression
+	| ternary_expression
 	;
 
 non_assignment_expression 
@@ -78,11 +78,11 @@ loop_expression
 	;
 
 while_expression
-	:  WHILE OPEN_PARENS conditional_expression CLOSE_PARENS block    
+	:  WHILE OPEN_PARENS ternary_expression CLOSE_PARENS block    
 	;
 
 for_expression
-	: FOR OPEN_PARENS for_initializer? SEMICOLON conditional_expression? SEMICOLON for_iterator? CLOSE_PARENS block 
+	: FOR OPEN_PARENS for_initializer? SEMICOLON ternary_expression? SEMICOLON for_iterator? CLOSE_PARENS block 
 	;
 
 foreach_expression
@@ -90,7 +90,7 @@ foreach_expression
 	;
 
 if_expression
-	: IF OPEN_PARENS conditional_expression CLOSE_PARENS block (ELSE block)? 
+	: IF OPEN_PARENS ternary_expression CLOSE_PARENS block (ELSE block)? 
 	; 
 
 assignment 
@@ -111,7 +111,7 @@ assignment_operator
 	| right_shift_assignment
 	;
 
-conditional_expression
+ternary_expression
 	: null_coalescing_expression (QUESTION_MARK embedded_statement COLON embedded_statement)?
 	;
 
@@ -120,14 +120,14 @@ null_coalescing_expression
 	;
 
 conditional_or_expression
-	: conditional_and_expression (OR conditional_and_expression)*
+	: and_expression (OR and_expression)*
 	;
 
-conditional_and_expression
-	: or_expression (AND or_expression)*
+and_expression
+	: xor_expression (AND xor_expression)*
 	;
 
-or_expression
+xor_expression
 	: equality_expression (CARET equality_expression)*
 	;
 
@@ -140,11 +140,15 @@ relational_expression
 	;
 
 shift_expression
-	: additive_expression ((LEFT_SHIFT | right_shift)  additive_expression)*
+	: add_expression ((LEFT_SHIFT | right_shift)  add_expression)*
 	;
 
-additive_expression
-	: multiplicative_expression ((PLUS | MINUS)  multiplicative_expression)*
+add_expression
+	: substract_expression (PLUS substract_expression)*
+	;
+
+substract_expression
+	: multiplicative_expression (MINUS add_expression)*
 	;
 
 multiplicative_expression
@@ -168,8 +172,7 @@ primary_expression
 primary_expression_start
 	: literal                               
 	| IDENTIFIER								
-	| parentheses_expression     
-	| LITERAL_ACCESS                          
+	| parentheses_expression                       
 	;
 
 parentheses_expression
@@ -230,7 +233,7 @@ for_initializer
 	;
 
 for_iterator
-	: conditional_expression (COMMA  conditional_expression)*
+	: ternary_expression (COMMA  ternary_expression)*
 	;
 
 right_arrow
@@ -373,7 +376,6 @@ IDENTIFIER:				 '@'? IdentifierOrKeyword;
 CHARACTER_LITERAL:	     [A-F] | [a-f];
 REGULAR_STRING:                      '"'  (~["\\\r\n\u0085\u2028\u2029] | CommonCharacter)* '"';
 VERBATIUM_STRING:                    '@"' (~'"' | '""')* '"';
-LITERAL_ACCESS:			 [0-9]+ IntegerTypeSuffix? '.' '@'? IdentifierOrKeyword;
 
 REAL_LITERAL:            [0-9]* ( '.' | ',' ) [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([FfDdMm] | ExponentPart [FfDdMm]?);
 INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
