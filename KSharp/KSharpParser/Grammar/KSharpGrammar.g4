@@ -148,7 +148,7 @@ add_expression
 	;
 
 substract_expression
-	: multiplicative_expression (MINUS add_expression)*
+	: multiplicative_expression (MINUS multiplicative_expression)*
 	;
 
 multiplicative_expression
