@@ -146,9 +146,11 @@ greater_than_expression
 greater_than_or_equal_expression
 	: less_than_expression (GREATER_EQUAL less_than_expression)*
 	;
+
 less_than_expression
 	: less_than_or_equal_expression (LT less_than_or_equal_expression)*
 	;
+
 less_than_or_equal_expression
 	: left_shift_expression (LESS_EQUAL left_shift_expression)*
 	;
@@ -189,10 +191,12 @@ unary_expression
 	| WAVE_DASH unary_expression
 	| INC unary_expression
 	| DEC unary_expression
+	| unary_expression DEC
+	| unary_expression INC
 	;
 
-primary_expression  
-	: pe=primary_expression_start bracket_expression* ((member_access | method_invocation | INC | DEC) bracket_expression*)*
+primary_expression  	
+	: primary_expression_start (bracket_expression | member_access | method_invocation)*
 	;
 
 primary_expression_start
