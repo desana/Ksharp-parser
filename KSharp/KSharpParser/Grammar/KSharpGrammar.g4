@@ -116,10 +116,10 @@ ternary_expression
 	;
 
 null_coalescing_expression
-	: conditional_or_expression (DOUBLE_QUESTION_MARK null_coalescing_expression)?
+	: or_expression (DOUBLE_QUESTION_MARK null_coalescing_expression)?
 	;
 
-conditional_or_expression
+or_expression
 	: and_expression (OR and_expression)*
 	;
 
@@ -132,15 +132,33 @@ xor_expression
 	;
 
 equality_expression
-	: relational_expression ((EQUAL | NOT_EQUAL)  relational_expression)*
+	: unequality_expression (EQUAL unequality_expression)*
 	;
 
-relational_expression
-	: shift_expression ((LT | RT | LOWER_EQUAL | HIGHER_EQUAL) shift_expression)*
+unequality_expression
+	: greater_than_expression (NOT_EQUAL greater_than_expression)*
 	;
 
-shift_expression
-	: add_expression ((LEFT_SHIFT | right_shift)  add_expression)*
+greater_than_expression
+	: greater_than_or_equal_expression (RT greater_than_or_equal_expression)*
+	;
+
+greater_than_or_equal_expression
+	: less_than_expression (GREATER_EQUAL less_than_expression)*
+	;
+less_than_expression
+	: less_than_or_equal_expression (LT less_than_or_equal_expression)*
+	;
+less_than_or_equal_expression
+	: left_shift_expression (LESS_EQUAL left_shift_expression)*
+	;
+
+left_shift_expression
+	: right_shift_expression (LEFT_SHIFT right_shift_expression)*
+	;
+
+right_shift_expression
+	: add_expression (right_shift add_expression)*
 	;
 
 add_expression
@@ -152,7 +170,15 @@ substract_expression
 	;
 
 multiplicative_expression
-	: unary_expression ((MUL | DIV | MOD)  unary_expression)*
+	: divide_expression (MUL divide_expression)*
+	;
+
+divide_expression
+	: modulo_expression (DIV modulo_expression)*
+	;
+
+modulo_expression
+	: unary_expression (MOD unary_expression)*
 	;
 
 unary_expression
@@ -201,17 +227,8 @@ lambda_expression
 
 anonymous_function_signature  
 	: OPEN_PARENS CLOSE_PARENS
-	| OPEN_PARENS explicit_anonymous_function_parameter_list CLOSE_PARENS
 	| OPEN_PARENS implicit_anonymous_function_parameter_list CLOSE_PARENS
 	| IDENTIFIER
-	;
-
-explicit_anonymous_function_parameter_list
-	: explicit_anonymous_function_parameter ( COMMA explicit_anonymous_function_parameter)*
-	;
-
-explicit_anonymous_function_parameter
-	: IDENTIFIER
 	;
 
 implicit_anonymous_function_parameter_list
@@ -245,7 +262,7 @@ right_shift
 	;
 
 right_shift_assignment
-	: first=RT second=HIGHER_EQUAL {$first.index + 1 == $second.index}? // Nothing between the tokens?
+	: first=RT second=GREATER_EQUAL {$first.index + 1 == $second.index}? // Nothing between the tokens?
 	;
 
 literal
@@ -329,8 +346,8 @@ LT:                      '<';
 RT:                      '>';
 POINTER:                 '->';
 
-LOWER_EQUAL :			 '<=';
-HIGHER_EQUAL :			 '>=';
+LESS_EQUAL :			 '<=';
+GREATER_EQUAL :			 '>=';
 LEFT_SHIFT:				 '<<';
 PIPE:					 '|';
 WAVE_DASH:				 '~';
