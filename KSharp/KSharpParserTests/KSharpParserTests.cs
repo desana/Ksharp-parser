@@ -55,7 +55,6 @@ namespace KSharprTests
             [TestCase("3.465e-5")]
             [TestCase("3.465e+5")]
             [TestCase("3.465")]
-            [TestCase("3,465")]
 
             [TestCase("identifier")]
             [TestCase("指")]
@@ -76,6 +75,7 @@ namespace KSharprTests
             }
 
 
+            [TestCase("3,465")]
             [TestCase(")", Description = "Unexpected token")]
             [TestCase("()", Description = "No content in the brackets")]
             [TestCase("1 |+} 2 ", Description = "Invalid operator")]
@@ -537,36 +537,6 @@ namespace KSharprTests
             [TestCase("Math.PI")]
             [TestCase("PI")]
             public void Math_IsSuccessful(string input)
-            {
-                Assert.AreEqual(0, GetParsingErrors(input));
-            }
-        }
-
-     
-        [TestFixture]
-        public class OpenExpressionsTests
-        {
-            [Ignore("Is handled on a higher level")]
-            [TestCase("for (i = 1; i <= 3; i++) { %}{% i %} {% }")]
-            [TestCase("foreach (i in array) { %}{% i %} {% }")]
-            [TestCase("foreach (i in array) { %}{% i %}-{% foreach (j in array) { %}{% j %}{% } %} {% }")]
-            [TestCase("i = 4;return; %}{% x = ((i mod 2) == 0);return; %}{% x ? \"yes\" : \"no\"")]
-            [TestCase("i = 3;return; %}{% x = ((i mod 2) == 0);return; %}{% x ? \"yes\" : \"no\"")]
-            [TestCase("for ( i = 0; i < 2; i++) { %}{% x = (i mod 2) == 0; %}{% x ? \"yes\" : \"no\" %}{% }")]
-            [TestCase("for ( i = 0; i < 2; i++) { %}{% x = false; x ? \"yes\" : \"no\" %}{% }")]
-            [TestCase("for ( i = 0; i < 2; i++) { x = false; x ? \"yes\" : \"no\" }")]
-            [TestCase("for ( i = 0; i < 2; i++) { %}{% x = (i mod 2) == 0; x ? \"yes\" : \"no\" %}testtext{% }")]
-            [TestCase("for ( i = 0; i < 2; i++) {  %}{% i %}{% }")]
-            
-            [TestCase("if (true) { %}<br>{%}|(encode)false")]
-            [TestCase("if (true) { %}{%\"<br>\"%}{%}|(encode)false")]
-            [TestCase("if (true) { %}{%\"<br>\"|(encode)%}{%}|(encode)false")]
-            [TestCase("if (true) { %}{%\"<br>\"|(encode)false%}{%}|(encode)true")]
-            [TestCase("if (true) {%}<br>{%\"test\"%}test{%}|(encode)")]
-            [TestCase("if (true) {%}<br>{%\"test\"%}test{%}|(encode)false%}{%\"<br>\"")]
-
-            [TestCase("if (PrintThreadCulturesTest() == \"en-GB,en-GB\") { %}{% PrintThreadCUlturesTest()|(culture)ja-JP %}{% }")]
-            public void OpenExpressions_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
             }
