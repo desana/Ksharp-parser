@@ -34,13 +34,8 @@ statement_list
 	;
 
 statement
-	: labeled_statement
-	| embedded_statement				                             
+	: embedded_statement				                             
 	| jump_statement												 
-	;
-
-labeled_statement
-	: IDENTIFIER COLON statement 
 	;
 
 embedded_statement
@@ -60,15 +55,15 @@ expression
 	| non_assignment_expression
 	;
 
-assignable_expression
-	: lambda_expression
-	| ternary_expression
-	;
-
 non_assignment_expression 
 	: assignable_expression
 	| if_expression  
 	| loop_expression
+	;
+
+assignable_expression
+	: lambda_expression
+	| ternary_expression
 	;
 
 loop_expression
@@ -221,10 +216,6 @@ indexer_argument
 	: (IDENTIFIER COLON)? expression
 	;
 
-expression_list
-	: expression (COMMA expression)*
-	;
-
 lambda_expression
 	: anonymous_function_signature right_arrow anonymous_function_body
 	;
@@ -254,7 +245,7 @@ for_initializer
 	;
 
 for_iterator
-	: ternary_expression (COMMA  ternary_expression)*
+	: assignment_expression
 	;
 
 right_arrow
