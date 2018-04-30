@@ -245,7 +245,8 @@ for_initializer
 	;
 
 for_iterator
-	: assignment_expression
+	: assignment
+	| unary_expression
 	;
 
 right_arrow
