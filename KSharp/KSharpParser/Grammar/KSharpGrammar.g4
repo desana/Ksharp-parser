@@ -342,7 +342,6 @@ CARET:                   '^';
 BANG:                    '!';
 LT:                      '<';
 RT:                      '>';
-POINTER:                 '->';
 
 LESS_EQUAL :			 '<=';
 GREATER_EQUAL :			 '>=';
@@ -383,8 +382,6 @@ OPEN_BRACE:				 '{';
 CLOSE_BRACE:			 '}';
 
  // <------- OTHER ------->
-SLASH:					 '/';
-ASTERISK:				 '*';
 PERCENT_SIGN:			 '%';
 IDENTIFIER:				 '@'? IdentifierOrKeyword;
 
@@ -396,7 +393,7 @@ REAL_LITERAL:            [0-9]* '.' [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([Ff
 INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
 DATE
 	: [0-3]? [0-9] PERIOD [0-1]? [0-9] PERIOD [0-9] [0-9] [0-9] [0-9] 
-	| [0-3]? [0-9] SLASH [0-1]? [0-9] SLASH [0-9] [0-9] [0-9] [0-9] 
+	| [0-3]? [0-9] DIV [0-1]? [0-9] DIV [0-9] [0-9] [0-9] [0-9] 
 	;
 
 
