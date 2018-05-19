@@ -217,21 +217,22 @@ indexer_argument
 	;
 
 lambda_expression
-	: anonymous_function_signature right_arrow anonymous_function_body
+	: lambda_signature right_arrow lambda_body
 	;
 
-anonymous_function_signature  
+lambda_signature  
 	: OPEN_PARENS CLOSE_PARENS
-	| OPEN_PARENS implicit_anonymous_function_parameter_list CLOSE_PARENS
+	| OPEN_PARENS lambda_signature_parameter_list CLOSE_PARENS
 	| IDENTIFIER
 	;
 
-implicit_anonymous_function_parameter_list
+lambda_signature_parameter_list
 	: IDENTIFIER (COMMA IDENTIFIER)*
 	;
 
-anonymous_function_body
-	: expression
+lambda_body
+	: parentheses_expression
+	| expression
 	| block
 	;
 

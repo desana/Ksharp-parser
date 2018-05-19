@@ -52,6 +52,8 @@
   <ItemGroup>
     <Compile Include="Integration\INodeEvaluator.cs" />
     <Compile Include="Integration\KSharpVisitor.cs" />
+    <Compile Include="Integration\KSharpVisitorExtensions.cs" />
+    <Compile Include="Integration\OperatorTypeEnum.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
