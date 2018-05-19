@@ -283,12 +283,11 @@ boolean_literal
 	| FALSE
 	;
 
-boolean_literal
-	: TRUE
-	| FALSE
+string_literal
+	: REGULAR_STRING
+	| VERBATIUM_STRING
 	;
 
-// -------------------- extra rules for modularization --------------------------------
 method_member_name
 	: (IDENTIFIER | IDENTIFIER DOUBLE_COLON IDENTIFIER) (PERIOD IDENTIFIER)*
 	;
@@ -325,7 +324,6 @@ RETURN:					 R E T U R N;
 TRUE:					 T R U E;
 WHILE:					 W H I L E;
 
-// <-------  ------->
 EQUAL:					 '==';
 NOT_EQUAL:				 '!='; 	
 

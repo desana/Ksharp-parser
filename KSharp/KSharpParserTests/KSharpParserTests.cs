@@ -573,12 +573,9 @@ return c
             [TestCase("print(\"Console\"); 2 + 3; return")]
             [TestCase("print(\"Console priority\") + \" works\"")]
             [TestCase("\"Simple string literal\"")]
-            [TestCase("\"3.456\"")]
-                        
-            [TestCase("2.48 + 0.02-- + ++2.0e-1;")]
-   
+            [TestCase("\"3.456\"")]                        
+
             [TestCase("x[y[z]]")]
-            [TestCase("if (x++) { a } else { z }")]
             [TestCase("x mod y == 2 of 100")]
             [TestCase("23.ToString(true)")]
             [TestCase("ahoj23.ToString(false)")]
@@ -594,11 +591,6 @@ return c
             [TestCase("\"X\"; print(\"Y\"); \"Z\"; print(\"W\")")]
             [TestCase("i = 4; x = ((i mod 2) == 0); x ? \"yes\" : \"no\"")]
             [TestCase("\"<br>\"")]
-            [TestCase(@"2++;3;-4 // comment
-/* comment
- * multiline */
-_id /* inline comment */ + _id2 + @""ahoj
-jak """" \n se mas""")]
 
             [TestCase("x ? \"yes\" : \"no\"")]
 
@@ -679,6 +671,20 @@ jak """" \n se mas""")]
             public void Uncategorized_IsSuccessful(string input)
             {
                 Assert.AreEqual(0, GetParsingErrors(input));
+            }
+
+
+            [TestCase(@"2++;3;-4 // comment
+/* comment
+ * multiline */
+_id /* inline comment */ + _id2 + @""ahoj
+jak """" \n se mas""")]
+
+            [TestCase("2.48 + 0.02-- + ++2.0e-1;")]
+            [TestCase("if (x++) { a } else { z }")]
+            public void Uncategorized_NotSuccessful(string input)
+            {
+                Assert.AreNotEqual(0, GetParsingErrors(input));
             }
         }
     }
