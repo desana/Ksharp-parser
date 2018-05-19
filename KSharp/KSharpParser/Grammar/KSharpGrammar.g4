@@ -89,7 +89,11 @@ if_expression
 	; 
 
 assignment 
-	: IDENTIFIER assignment_operator assignable_expression
+	: IDENTIFIER assignment_operator assignable_expression	
+	| INC IDENTIFIER
+	| DEC IDENTIFIER
+	| IDENTIFIER DEC
+	| IDENTIFIER INC
 	;
 
 assignment_operator
@@ -184,10 +188,6 @@ unary_expression
 	| MINUS unary_expression
 	| BANG unary_expression
 	| WAVE_DASH unary_expression
-	| INC unary_expression
-	| DEC unary_expression
-	| unary_expression DEC
-	| unary_expression INC
 	;
 
 primary_expression  	
