@@ -231,7 +231,7 @@ lambda_signature_parameter_list
 	;
 
 lambda_body
-	: parentheses_expression
+	: OPEN_PARENS statement_list CLOSE_PARENS
 	| expression
 	| block
 	;

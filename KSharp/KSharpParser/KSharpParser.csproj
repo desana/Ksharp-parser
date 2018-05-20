@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Integration\ComparerBase.cs" />
     <Compile Include="Integration\INodeEvaluator.cs" />
     <Compile Include="Integration\KSharpVisitor.cs" />
     <Compile Include="Integration\KSharpVisitorExtensions.cs" />
