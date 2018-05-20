@@ -1,11 +1,10 @@
 ﻿using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
 
 using KSharpParser;
 
 using NUnit.Framework;
 
-namespace KSharprTests
+namespace KSharpParserTests
 {    
     public class KSharprTests
     {
@@ -17,8 +16,6 @@ namespace KSharprTests
             KSharpGrammarLexer lexer = new KSharpGrammarLexer(inputStream);
 
             CommonTokenStream commonTokenStream = new CommonTokenStream(lexer);
-            commonTokenStream.Fill();
-            var tokens = commonTokenStream.GetTokens();
 
             KSharpGrammarParser parser = new KSharpGrammarParser(commonTokenStream);
             return parser;
@@ -29,7 +26,7 @@ namespace KSharprTests
         {
             KSharpGrammarParser parser = CreaterParserFromInput(input);
 
-            ITree tree = parser.begin_expression();
+            parser.begin_expression();
 
             return parser.NumberOfSyntaxErrors;
         }
