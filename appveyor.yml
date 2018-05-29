@@ -22,3 +22,7 @@ deploy:
     symbol_server: https://ci.appveyor.com/nuget/desana/api/v2/package
     api_key:
       secure: L+jq/lFTMkQh476IjCklQjFSTC6J41DEhTOfJuboETI=
+      
+artifacts:
+  - path: ./KSharp/KSharpParser/bin/Release/KSharpParser.1.0.*.nupkg
+    name: KSharpParser
