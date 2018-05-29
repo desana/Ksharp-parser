@@ -21,7 +21,7 @@ deploy:
   - provider: NuGet
     artifacts: KSharp
     api_key:
-      secure: Zmdkbdpo1JTxTld5Qh1FZb8y/V1j06cxFEcRIrkroztXmUVq83kGLxZ8TCzNeUQ8
+      secure: QT9ZmgMrZ10a3ctbj79p8asDjJ01VwWlMiaEVgM94aButgkkwpQLeHWbXj/JlAOP
       
 artifacts:
   - path: '**/KSharp*.nupkg'
