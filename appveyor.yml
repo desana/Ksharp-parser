@@ -25,4 +25,4 @@ deploy:
       
 artifacts:
   - path: '**\*.nupkg'
-    name: KSharpParser
+    name: KSharp
