@@ -21,7 +21,7 @@ deploy:
   - provider: NuGet
     symbol_server: https://ci.appveyor.com/nuget/desana/api/v2/package
     api_key:
-      secure: L+jq/lFTMkQh476IjCklQjFSTC6J41DEhTOfJuboETI=
+      secure: jIyxZr853D01Ymtdb4nYJgC7Nhgmo2IGxAOHtNT94k0=
       
 artifacts:
   - path: '**\KSharp*.nupkg'
