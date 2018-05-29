@@ -19,7 +19,7 @@ build:
   
 deploy:
   - provider: NuGet
-    artifact: KSharp
+    artifacts: KSharp
     api_key:
       secure: qP7D/OZt68TRxqtCOopzclL4SVSDXpMlBiDxtJsksJgE3nPcFlSKIxRGzGNDR31h
       
