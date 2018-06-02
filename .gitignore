@@ -38,3 +38,5 @@ _ReSharper*/
 
 #Project files
 [Bb]uild/
+*.snk
+/KSharp/.vs/KSharp

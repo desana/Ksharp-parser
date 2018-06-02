@@ -6,8 +6,9 @@ using System.Linq;
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
-
+using Antlr4.Runtime.Tree;
 using KSharpParser;
+using KSharpParser.Integration;
 using static KSharpParser.KSharpGrammarParser;
 
 namespace KSharp
@@ -181,7 +182,7 @@ namespace KSharp
         }
 
 
-        private object EvaluateMethodCall(string methodName, object parameters)
+        private object EvaluateMethodCall(string methodName, object[] parameters, object objectToCallMethodOn = null)
         {
             // if method is lambda, evaluate lambda expression, otherwise use evaluator
             if (mLocalVariables.TryGetValue(methodName, out object lambdaContext))
@@ -189,22 +190,24 @@ namespace KSharp
                 return InvokeLambdaExpression(lambdaContext as Lambda_expressionContext, parameters as object[]);
             }
 
-            return mEvaluator.InvokeMethod(methodName as string, parameters as object[]);
+            return objectToCallMethodOn == null 
+                ? mEvaluator.InvokeMethod(methodName as string, parameters)
+                : mEvaluator.InvokeMethodForObject(objectToCallMethodOn, methodName, parameters);
         }
 
 
-        private object EvaluateMethod(string methodName, Antlr4.Runtime.Tree.IParseTree context)
+        private object EvaluateMethod(string methodName, IParseTree argumentContext, object objectToCallMethodOn = null)
         {
             object result = null;
 
-            var arguments = VisitMethod_invocation(context as Method_invocationContext);
-            result = EvaluateMethodCall(methodName, arguments);
+            var arguments = VisitMethod_invocation(argumentContext as Method_invocationContext) as object[];
+            result = EvaluateMethodCall(methodName, arguments, objectToCallMethodOn);
 
             return result;
         }
+        
 
-
-        private object EvaluateIndexer(string collectionName, Antlr4.Runtime.Tree.IParseTree context)
+        private object EvaluateIndexer(string collectionName, IParseTree context)
         {
             object result = null;
 
@@ -223,7 +226,7 @@ namespace KSharp
 
             return result;
         }
-
+        
 
         private object EvaluateAccessor(object accessedObject, Antlr4.Runtime.Tree.IParseTree context)
         {
@@ -266,12 +269,6 @@ namespace KSharp
                
         private object AddObjects(object leftOperand, object rightOperand)
         {
-            var areStrings = leftOperand is string && rightOperand is string;
-            if (areStrings)
-            {
-                return String.Concat(leftOperand, rightOperand);
-            }
-
             var areIntegers = leftOperand is int && rightOperand is int;
             if (areIntegers)
             {
@@ -296,6 +293,12 @@ namespace KSharp
                 return ((TimeSpan)leftOperand).Add((TimeSpan)rightOperand);
             }
 
+            var areStrings = leftOperand is string || rightOperand is string;
+            if (areStrings)
+            {
+                return String.Concat(leftOperand.ToString(), rightOperand.ToString());
+            }
+
             throw new InvalidOperationException($"Objects of types {leftOperand.GetType().Name} and {rightOperand.GetType().Name} can not be added.");
         }
 
@@ -311,7 +314,7 @@ namespace KSharp
             var areNumeric = (leftOperand is int || leftOperand is decimal) && (rightOperand is int || rightOperand is decimal);
             if (areNumeric)
             {
-                return (decimal)leftOperand - (decimal)rightOperand;
+                return Convert.ToDecimal(leftOperand) - Convert.ToDecimal(rightOperand);
             }
 
             if (leftOperand is DateTime)
@@ -349,7 +352,9 @@ namespace KSharp
                 ?? Comparer.Default;
 
             if (x != y || comparer == null)
-                throw new NotSupportedException($"Comparison of {x.Name} and {y.Name} is not supported");
+            {
+                return new NullValuesComparer();
+            }
 
             return comparer;
         }
@@ -376,7 +381,7 @@ namespace KSharp
 
 
         private bool IsUnequal(object leftOperand, object rightOperand) 
-            => !(bool)IsEqual(leftOperand, rightOperand);
+            => !IsEqual(leftOperand, rightOperand);
 
         #endregion
 
@@ -1225,17 +1230,28 @@ namespace KSharp
                     expStart = EvaluateIndexer((string)expStart, subExpressionContext);
                 }
 
+                // member.property.access
+                else if (subExpressionContext is Member_accessContext)
+                {
+
+                    var nextChildContext = context.GetChild(i + 1);
+                    if (nextChildContext != null && nextChildContext is Method_invocationContext)
+                    {
+                        expStart = EvaluateMethod((string)VisitMember_access(subExpressionContext as Member_accessContext), nextChildContext, expStart);
+                        i++;
+                    }
+                    else
+                    {
+                        expStart = EvaluateAccessor(expStart, subExpressionContext);
+                    }
+                }
+
                 // method(param1, ..)
                 else if (subExpressionContext is Method_invocationContext)
                 {
                     expStart = EvaluateMethod((string)expStart, subExpressionContext);
                 }
 
-                // member.property.access
-                else if (subExpressionContext is Member_accessContext)
-                {   
-                    expStart = EvaluateAccessor(expStart, subExpressionContext);                    
-                }
             }
             
             if (IsIdentifier(expStart) && canBeIdentifier)
@@ -1251,6 +1267,7 @@ namespace KSharp
 
             return expStart;
         }
+
 
 
         /// <summary>
