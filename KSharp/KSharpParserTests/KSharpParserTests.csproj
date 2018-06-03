@@ -76,9 +76,21 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="KSharpVisitorTests.cs" />
-    <Compile Include="KSharpParserTests.cs" />
+    <Compile Include="TestBase\KSharpVisitorExtension.cs" />
+    <Compile Include="Visitor\AssignmentTests.cs" />
+    <Compile Include="Visitor\DataTypeTests.cs" />
+    <Compile Include="Visitor\IfTests.cs" />
+    <Compile Include="Visitor\LambdaTests.cs" />
+    <Compile Include="Visitor\MethodTests.cs" />
+    <Compile Include="Visitor\OutputTests.cs" />
+    <Compile Include="Visitor\ParameterTests.cs" />
+    <Compile Include="TestBase\KSharpTestBase.cs" />
+    <Compile Include="Visitor\MiscellaneousTests.cs" />
+    <Compile Include="Parser\KSharpParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestBase\TestEvaluator.cs" />
+    <Compile Include="Visitor\LoopTests.cs" />
+    <Compile Include="Visitor\OperationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
@@ -91,6 +103,7 @@
       <Name>KSharpParser</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

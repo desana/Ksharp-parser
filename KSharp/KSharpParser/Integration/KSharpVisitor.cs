@@ -7,8 +7,10 @@ using System.Linq;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
+
 using KSharpParser;
 using KSharpParser.Integration;
+
 using static KSharpParser.KSharpGrammarParser;
 
 namespace KSharp
@@ -402,15 +404,31 @@ namespace KSharp
             var parameterName = VisitParameter_name(context.parameter_name()) as string;
             object parameterValue = null;
 
-            var parameterContext = context.parameter_value();
-            if (parameterContext != null)
+            var parameterValueContext = context.parameter_value();
+            if (parameterValueContext != null)
             {
-                parameterValue = parameterContext.GetText();
+                parameterValue = VisitParameter_value(parameterValueContext);
             }
 
             mEvaluator.SaveParameter(parameterName, parameterValue);
 
             return null;
+        }
+
+
+        /// <summary>
+        /// Returns the value of the parameter.
+        /// </summary>
+        /// <param name="context">Context of the parser rule.</param>
+        /// <returns>Value of the parameter.</returns>
+        public override object VisitParameter_value([NotNull] Parameter_valueContext context)
+        {            
+            if (context.GetChild(0) is LiteralContext)
+            {
+                return VisitLiteral(context.literal());
+            }
+
+            return context.GetText();
         }
 
 
@@ -472,13 +490,13 @@ namespace KSharp
             var simpleLiteral = context.INTEGER_LITERAL();
             if (simpleLiteral != null)
             {
-                return Convert.ToInt32(simpleLiteral.GetText());
+                return Int32.Parse(simpleLiteral.GetText());
             }
 
             simpleLiteral = context.REAL_LITERAL();
             if (simpleLiteral != null)
             {
-                return Convert.ToDecimal(simpleLiteral.GetText());
+                return Decimal.Parse(simpleLiteral.GetText(), System.Globalization.NumberStyles.Any);
             }
 
             simpleLiteral = context.CHARACTER_LITERAL();
