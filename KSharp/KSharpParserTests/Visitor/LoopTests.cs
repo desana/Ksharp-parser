@@ -75,5 +75,19 @@ namespace KSharpParserTests.Visitor
                 Assert.Throws<NullReferenceException>(() => Visitor.GetFirstResult(GetParser(input).begin_expression()));
             }
         }
+
+
+        [TestFixture]
+        public class ForeachTests : KSharpTestBase
+        {
+            [TestCase("y = List(1,2,3,4,4,5,4); foreach (x in y) {x}", new object[]{ 1, 2, 3, 4, 4, 5, 4 })]      
+            [TestCase("foreach (x in \"hello\") {x.toupper()}", new object[] { "H","E","L","L", "O" })]
+            [TestCase("array = List(1,2); foreach (i in array) { foreach (j in array) { j } }", new object[] { 1,2,1,2 })]
+            public void Foreach_IsSuccessful(string input, object expected)
+            {
+                var tree = GetParser(input).begin_expression();
+                Assert.AreEqual(expected, Visitor.GetResultList(tree));
+            }
+        }
     }
 }

@@ -20,10 +20,10 @@ namespace KSharpParserTests
         [SetUp]
         public void SetUp()
         {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
             NodeEvaluator = new TestEvaluator();
             Visitor = new KSharpVisitor(NodeEvaluator);
-
-            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
         }
         
 

@@ -1,6 +1,9 @@
 ﻿
 using NUnit.Framework;
 
+using System;
+using System.Globalization;
+
 namespace KSharpParserTests
 {
 
@@ -20,6 +23,32 @@ namespace KSharpParserTests
         {
             var tree = GetParser(input).begin_expression();
             Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
+        }
+
+
+        [TestCase("ToDateTime(\"12/31/2017 11:59 PM\")", "12/31/2017 11:59 PM")]
+        [TestCase("ToDateTime(\"10/5/2010\")", "10/5/2010")]
+        public void Method_InvariantCulture_IsSuccessful_HasDateTimeResult(string input, string expectedDate)
+        {
+            var tree = GetParser(input).begin_expression();
+            Assert.AreEqual(DateTime.Parse(expectedDate), Visitor.GetFirstResult(tree));
+        }
+
+
+        [TestCase("ToDateTime(\"31.12.2017 11:59 PM\")", "31.12.2017 11:59 PM")]
+        [TestCase("ToDateTime(\"10.5.2010\")", "10.5.2010")]
+        public void Method_CzechCulture_IsSuccessful_HasDateTimeResult(string input, string expectedDate)
+        {
+            var tree = GetParser(input).begin_expression();
+            Assert.AreEqual(DateTime.Parse(expectedDate, CultureInfo.GetCultureInfo("cs-cz")), Visitor.GetFirstResult(tree));
+        }
+
+
+        [TestCase("ToTimeSpan(\"1:00:00\")")]
+        public void Method_IsSuccessful_HasTimeSpanResult(string input)
+        {
+            var tree = GetParser(input).begin_expression();
+            Assert.AreEqual(TimeSpan.Parse("1:00:00"), Visitor.GetFirstResult(tree));
         }
     }
 }

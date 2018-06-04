@@ -1,5 +1,7 @@
 ﻿using KSharp;
+
 using Moq;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -36,6 +38,17 @@ namespace KSharpParserTests
             evaluatorMock.Setup(m => m.InvokeMethod("ToDouble", new object[] { "2.45", 0, "en-us" })).Returns(2.45);
             evaluatorMock.Setup(m => m.InvokeMethod("ToDouble", new object[] { "2,45", 0, "cs-cz" })).Returns(2.45);
             evaluatorMock.Setup(m => m.InvokeMethod("ToDouble", new object[] { "2,45" })).Returns(2.45);
+
+            evaluatorMock.Setup(m => m.InvokeMethod("ToDateTime", new object[] { "10/5/2010" })).Returns(DateTime.Parse("10/5/2010"));
+            evaluatorMock.Setup(m => m.InvokeMethod("ToDateTime", new object[] { "12/31/2017 11:59 PM" })).Returns(DateTime.Parse("12/31/2017 11:59 PM"));
+            evaluatorMock.Setup(m => m.InvokeMethod("ToTimeSpan", new object[] { "1:00:00" })).Returns(TimeSpan.Parse("1:00:00"));
+            evaluatorMock.Setup(m => m.InvokeMethod("ToDateTime", new object[] { "10.5.2010" })).Returns(DateTime.Parse("10.5.2010", CultureInfo.GetCultureInfo("cs-cz")));
+            evaluatorMock.Setup(m => m.InvokeMethod("ToDateTime", new object[] { "31.12.2017 11:59 PM" })).Returns(DateTime.Parse("31.12.2017 11:59 PM", CultureInfo.GetCultureInfo("cs-cz")));
+
+            evaluatorMock.Setup(m => m.InvokeMethod("List", new object[] { 1, 2, 3, 4, 4, 5, 4 })).Returns(new ArrayList { 1, 2, 3, 4, 4, 5, 4 });
+
+            evaluatorMock.Setup(m => m.InvokeMethodForObject("l", "toupper", new object[] {})).Returns("L");
+
         }
 
 
