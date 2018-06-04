@@ -57,6 +57,8 @@ namespace KSharpParserTests.Visitor
             [TestCase("\"\" + False", "False")]
 
             [TestCase("@\"This string displays as is. No newlines\n, tabs\t or backslash-escapes\\.\"", "@\"This string displays as is. No newlines\n, tabs\t or backslash-escapes\\.")]
+
+            [TestCase("\"<br>\"", "<br>")]
             public void String_IsSuccessful_HasResult(string input, string expected)
             {
                 var tree = GetParser(input).begin_expression();

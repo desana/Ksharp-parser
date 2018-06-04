@@ -223,7 +223,15 @@ namespace KSharp
             else
             {
                 string stringIndex = ((string)index).Trim('"');
-                result = (collection as DataRow)[stringIndex];
+
+                if (collection is DataRow)
+                {
+                    result = (collection as DataRow)[stringIndex];
+                }
+                else
+                {
+                    result = (collection as IDictionary)[stringIndex];
+                }
             }
 
             return result;

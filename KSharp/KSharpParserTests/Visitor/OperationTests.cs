@@ -36,6 +36,8 @@ namespace KSharpParserTests.Visitor
             [TestCase(@"1==0 && 2==2", false)]
             [TestCase(@"1==0 and 2==2", false)]
             [TestCase(@"1==0 || 1==2", false)]
+
+            [TestCase("i = 4; ((i mod 2) == 0)", true)]
             public void Logical_IsSuccessful_HasResult(string input, bool expected)
             {
                 var tree = GetParser(input).begin_expression();

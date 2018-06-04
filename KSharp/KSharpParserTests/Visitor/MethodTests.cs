@@ -12,7 +12,6 @@ namespace KSharpParserTests
     {
         [TestCase("5.ToString()", "5")]
         [TestCase("\"aaa\".ToUpper()", "AAA")]
-
         [TestCase("ToUpper(\"aaa\")", "AAA")]
 
         [TestCase("\"\" + ToDouble(\"2.45\", 0, \"en-us\")", "2.45")]

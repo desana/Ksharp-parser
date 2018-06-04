@@ -20,6 +20,9 @@ namespace KSharpParserTests
         private Mock<INodeEvaluator> evaluatorMock;
 
 
+        private string consoleOutput;
+
+
         public TestEvaluator()
         {
             Parameters = new Dictionary<string, object>();
@@ -47,8 +50,20 @@ namespace KSharpParserTests
 
             evaluatorMock.Setup(m => m.InvokeMethod("List", new object[] { 1, 2, 3, 4, 4, 5, 4 })).Returns(new ArrayList { 1, 2, 3, 4, 4, 5, 4 });
 
-            evaluatorMock.Setup(m => m.InvokeMethodForObject("l", "toupper", new object[] {})).Returns("L");
+            evaluatorMock.Setup(m => m.InvokeMethodForObject("l", "toupper", new object[] { })).Returns("L");
 
+            evaluatorMock.Setup(m => m.InvokeMethod("GetDict", new object[] { })).Returns(new Dictionary<string, int>()
+            {
+                { "one", 1 }
+            });
+
+            evaluatorMock.Setup(m => m.InvokeMethod("print", It.IsAny<object[]>())).Returns<string, object[]>((methodName, objectToPrint) => consoleOutput += Convert.ToString(objectToPrint[0]));
+            evaluatorMock.Setup(m => m.InvokeMethod("println", It.IsAny<object[]>())).Returns<string, object[]>((methodName, objectToPrint) => {
+                consoleOutput += Convert.ToString(objectToPrint[0]);
+                string temp = consoleOutput;
+                consoleOutput = "";
+                return temp;
+            });
         }
 
 
@@ -75,5 +90,4 @@ namespace KSharpParserTests
             Parameters.Add(parameterName, parameterValue);
         }
     }
-
 }

@@ -41,5 +41,22 @@ namespace KSharpParserTests.Visitor
                 Assert.IsNull(Visitor.GetResultList(tree));
             }
         }
+
+        [TestFixture]
+        public class PrintTests : KSharpTestBase
+        {
+
+            [TestCase("print(\"Console\");", new object[] { "Console" })]
+            [TestCase("print(\"Console priority\"); \"overriden\"", new object[] { "Console priorityoverriden" })]
+            [TestCase("print(\"Console\"); 2 + 3; return", new object[] { "Console6" })]
+            [TestCase("print(\"Console priority\"); println(\" works\")", new object[] { "Console priority works" })]
+            [TestCase("println(\"first\"); println(\"second\");", new object[] { "first", "second" })]
+            [TestCase("print(\"Console priority\"); println(\" works\"); print(\" good enough!\")", new object[] { "Console priority works", " good enough!" })]
+            public void Print_IsSuccessful_HasListOfResults(string input, object expected)
+            {
+                var tree = GetParser(input).begin_expression();
+                Assert.AreEqual(expected, Visitor.GetResultList(tree));
+            }
+        }
     }
 }

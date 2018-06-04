@@ -40,6 +40,20 @@ namespace KSharpParserTests
                 var tree = GetParser(input).begin_expression();
                 Assert.IsNull(Visitor.GetResultList(tree));
             }
-        }        
+        }
+        
+
+        [TestFixture]
+        public class IndexerTests : KSharpTestBase
+        {
+            [TestCase("list = List(1,2,3,4,4,5,4); list[0]", 1)]
+            [TestCase("dict = GetDict(); dict[\"one\"]", 1)]
+            [TestCase("\"hello\"[1]", "e")]
+            public void Indexer_IsSuccessful(string input, object expected)
+            {
+                var tree = GetParser(input).begin_expression();
+                Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
+            }
+        }
     }
 }
