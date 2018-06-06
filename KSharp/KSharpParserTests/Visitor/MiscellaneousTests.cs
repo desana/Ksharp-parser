@@ -12,6 +12,8 @@ namespace KSharpParserTests
             public void Braces_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
         }
@@ -24,6 +26,8 @@ namespace KSharpParserTests
             public void Comment_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
 
@@ -38,6 +42,8 @@ namespace KSharpParserTests
             public void Comment_IsSuccessful_NoResult(string input)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.IsNull(Visitor.GetResultList(tree));
             }
         }
@@ -47,11 +53,15 @@ namespace KSharpParserTests
         public class IndexerTests : KSharpTestBase
         {
             [TestCase("list = List(1,2,3,4,4,5,4); list[0]", 1)]
+            [TestCase("list = List(1,2,3,4,4,5,4); list[0+1]", 2)]
             [TestCase("dict = GetDict(); dict[\"one\"]", 1)]
             [TestCase("\"hello\"[1]", "e")]
+            [TestCase("x[y[z]]")]
             public void Indexer_IsSuccessful(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
         }

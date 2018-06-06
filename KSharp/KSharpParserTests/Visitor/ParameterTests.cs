@@ -19,6 +19,7 @@ namespace KSharpParserTests
             object value;
             NodeEvaluator.Parameters.TryGetValue(expectedKey, out value);
 
+            Assert.IsNull(tree.exception);
             Assert.AreEqual(expectedValue, value);
         }
     }

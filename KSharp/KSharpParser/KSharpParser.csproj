@@ -61,11 +61,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Integration\ComparerBase.cs" />
+    <Compile Include="Integration\Comparers\ComparerBase.cs" />
     <Compile Include="Integration\INodeEvaluator.cs" />
     <Compile Include="Integration\KSharpVisitor.cs" />
     <Compile Include="Integration\KSharpVisitorExtensions.cs" />
-    <Compile Include="Integration\NullValuesComparer.cs" />
+    <Compile Include="Integration\Comparers\NullComparer.cs" />
+    <Compile Include="Integration\Comparers\NumericComparer.cs" />
     <Compile Include="Integration\OperatorTypeEnum.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

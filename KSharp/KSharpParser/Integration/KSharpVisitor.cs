@@ -32,6 +32,25 @@ namespace KSharp
 
         private bool returnFromLoop = false;
         
+        private List<Type> mNumericTypes = new List<Type>()
+        {
+            typeof(int),
+            typeof(double),
+            typeof(long),
+            typeof(short),
+            typeof(float),
+            typeof(Int16),
+            typeof(Int32),
+            typeof(Int64),
+            typeof(uint),
+            typeof(UInt16),
+            typeof(UInt32),
+            typeof(UInt64),
+            typeof(sbyte),
+            typeof(Single),
+            typeof(decimal)
+        };
+
         #endregion
 
 
@@ -105,7 +124,7 @@ namespace KSharp
         }
 
 
-        private object InvokeLambdaExpression(Lambda_expressionContext context, object[] parameterValues)
+        private object InvokeLambdaExpression(Lambda_expressionContext context, object[] arguments)
         {
             var lambdaBodyContext = context.lambda_body();
             if (lambdaBodyContext == null)
@@ -123,7 +142,7 @@ namespace KSharp
                 }
             }
 
-            var lambdaVisitor = new KSharpVisitor(mEvaluator, mLocalVariables, parameterNames, parameterValues);
+            var lambdaVisitor = new KSharpVisitor(mEvaluator, mLocalVariables, parameterNames, arguments);
             Tuple<Dictionary<string, object>, object> result = lambdaVisitor.VisitLambda_body(lambdaBodyContext) as Tuple<Dictionary<string, object>, object>;
 
             // update variables which were changed within lambda
@@ -184,28 +203,23 @@ namespace KSharp
         }
 
 
-        private object EvaluateMethodCall(string methodName, object[] parameters, object objectToCallMethodOn = null)
+        private object EvaluateMethodCall(string methodName, object[] arguments)
         {
             // if method is lambda, evaluate lambda expression, otherwise use evaluator
             if (mLocalVariables.TryGetValue(methodName, out object lambdaContext))
             {
-                return InvokeLambdaExpression(lambdaContext as Lambda_expressionContext, parameters as object[]);
+                return InvokeLambdaExpression(lambdaContext as Lambda_expressionContext, arguments as object[]);
             }
 
-            return objectToCallMethodOn == null 
-                ? mEvaluator.InvokeMethod(methodName as string, parameters)
-                : mEvaluator.InvokeMethodForObject(objectToCallMethodOn, methodName, parameters);
+            return mEvaluator.InvokeMethod(methodName as string, arguments);
         }
 
 
-        private object EvaluateMethod(string methodName, IParseTree argumentContext, object objectToCallMethodOn = null)
+        private object EvaluateMethod(string methodName, IParseTree argumentContext)
         {
-            object result = null;
-
             var arguments = VisitMethod_invocation(argumentContext as Method_invocationContext) as object[];
-            result = EvaluateMethodCall(methodName, arguments, objectToCallMethodOn);
 
-            return result;
+            return EvaluateMethodCall(methodName, arguments);
         }
         
 
@@ -238,15 +252,12 @@ namespace KSharp
         }
         
 
-        private object EvaluateAccessor(object accessedObject, Antlr4.Runtime.Tree.IParseTree context)
+        private object EvaluateAccessor(object accessedObject, IParseTree acessorContext, IParseTree argumentsContext)
         {
-            object result = null;
+            var propertyOrMethodName = (string)VisitMember_access(acessorContext as Member_accessContext);
+            var arguments = VisitMethod_invocation(argumentsContext as Method_invocationContext) as object[];
 
-            var propertyName = (string)VisitMember_access(context as Member_accessContext);
-
-            result = accessedObject.GetType().GetProperty(propertyName).GetValue(accessedObject, null);  
-
-            return result;
+            return mEvaluator.InvokeMember(accessedObject, propertyOrMethodName, arguments);  
         }
 
         #endregion
@@ -352,42 +363,75 @@ namespace KSharp
 
         #region "Comparison methods"
 
-        private IComparer GetComparer(Type x, Type y)
+        private IComparer GetComparer(object left, object right)
         {
-            IComparer comparer = mEvaluator
-                .KnownComparers
-                .Where(c => c.Key == x)
-                .Cast<IComparer>()
-                .FirstOrDefault()
-                ?? Comparer.Default;
+            Type leftType = left?.GetType();
+            Type rightType = right?.GetType();
 
-            if (x != y || comparer == null)
+            if (leftType == null || rightType == null)
             {
-                return new NullValuesComparer();
+                return new NullComparer();
             }
+
+            var type = leftType;
+            if (leftType != rightType) {
+
+                if (IsNumeric(leftType) && IsNumeric(rightType))
+                {
+                    return new NumericComparer();
+                }
+
+                else if (rightType.IsAssignableFrom(leftType))
+                {
+                    type = rightType;
+                }
+
+                else if (leftType.IsAssignableFrom(rightType))
+                {
+                    type = leftType;
+                }
+
+                else
+                {
+                    throw new NotSupportedException($"Comparison of {leftType.GetType().Name} and {rightType.GetType().Name} is not supported");
+                }
+            }
+
+            IComparer comparer = mEvaluator
+            .KnownComparers
+            .Where(comp => type.IsAssignableFrom(comp.Key))
+            .Cast<IComparer>()
+            .FirstOrDefault()
+            ?? Comparer.Default;
 
             return comparer;
         }
 
 
+        private bool IsNumeric(Type type)
+        {
+            return mNumericTypes.Contains(type);
+        }
+
+
         private bool IsGreater(object leftOperand, object rightOperand)
-            => GetComparer(leftOperand.GetType(), rightOperand.GetType()).Compare(leftOperand, rightOperand) > 0;
+            => GetComparer(leftOperand, rightOperand).Compare(leftOperand, rightOperand) > 0;
 
 
         private bool IsGreaterOrEqual(object leftOperand, object rightOperand)
-            => GetComparer(leftOperand.GetType(), rightOperand.GetType()).Compare(leftOperand, rightOperand) >= 0;
+            => GetComparer(leftOperand, rightOperand).Compare(leftOperand, rightOperand) >= 0;
 
 
         private bool IsLess(object leftOperand, object rightOperand)
-            => GetComparer(leftOperand.GetType(), rightOperand.GetType()).Compare(leftOperand, rightOperand) < 0;
+            => GetComparer(leftOperand, rightOperand).Compare(leftOperand, rightOperand) < 0;
 
 
         private bool IsLessOrEqual(object leftOperand, object rightOperand)
-            => GetComparer(leftOperand.GetType(), rightOperand.GetType()).Compare(leftOperand, rightOperand) <= 0;
+            => GetComparer(leftOperand, rightOperand).Compare(leftOperand, rightOperand) <= 0;
 
 
         private bool IsEqual(object leftOperand, object rightOperand)
-            => GetComparer(leftOperand.GetType(), rightOperand.GetType()).Compare(leftOperand, rightOperand) == 0;
+            => GetComparer(leftOperand, rightOperand).Compare(leftOperand, rightOperand) == 0;
 
 
         private bool IsUnequal(object leftOperand, object rightOperand) 
@@ -566,7 +610,7 @@ namespace KSharp
             {
                 if (variableOriginalValue == null)
                 {
-                    throw new InvalidOperationException("Cannot increment undefined value.");
+                    throw new NullReferenceException("Cannot increment undefined value.");
                 }
 
                 var value = Convert.ToInt32(variableOriginalValue);
@@ -1179,8 +1223,24 @@ namespace KSharp
                 VisitParameter(context.parameter(i));                
             }
 
-            return VisitStatement_list(context.statement_list());
+            var results = VisitStatement_list(context.statement_list()) as IList;
+
+            var consoleOutput = mEvaluator.FlushOutput()?.ToString();
+            if (consoleOutput != null)
+            {
+                if (results != null)
+                { 
+                    results.Add(consoleOutput);
+                }
+                else
+                {
+                    results = new List<object>() { consoleOutput };
+                }
+            }
+
+            return results;
         }
+
 
         
         /// <summary>
@@ -1192,18 +1252,39 @@ namespace KSharp
         {
             List<object> results = new List<object>();
 
+            string consoleOutput = null;
+
             var statements = context.statement();
             foreach (var statement in statements)
             {
                 var statementResult = VisitStatement(statement);
-                if (statementResult != null) { 
+                if (statementResult != null) {
+
+                    consoleOutput = mEvaluator.FlushOutput()?.ToString();
+
                     if (statementResult is List<object>)
                     {
-                        (statementResult as List<object>).ForEach(subResult => results.Add(subResult));
+                        if (consoleOutput != null)
+                        {
+                            var resultItem = String.Concat(consoleOutput, statementResult.ToString());
+                            results.Add(resultItem);
+                        }
+                        else
+                        {
+                            (statementResult as List<object>).ForEach(subResult => results.Add(subResult));
+                        }
                     }
-                    else 
+                    else
                     {
-                        results.Add(statementResult);
+                        if (consoleOutput != null && consoleOutput != String.Empty)
+                        {
+                            var resultItem = String.Concat(consoleOutput, statementResult.ToString());
+                            results.Add(resultItem);
+                        }
+                        else
+                        {
+                            results.Add(statementResult);
+                        }
                     }
                 }
 
@@ -1259,17 +1340,14 @@ namespace KSharp
                 // member.property.access
                 else if (subExpressionContext is Member_accessContext)
                 {
-
                     var nextChildContext = context.GetChild(i + 1);
                     if (nextChildContext != null && nextChildContext is Method_invocationContext)
                     {
-                        expStart = EvaluateMethod((string)VisitMember_access(subExpressionContext as Member_accessContext), nextChildContext, expStart);
+                        expStart = EvaluateAccessor(expStart, subExpressionContext, nextChildContext);
                         i++;
                     }
-                    else
-                    {
-                        expStart = EvaluateAccessor(expStart, subExpressionContext);
-                    }
+
+                    expStart = EvaluateAccessor(expStart, subExpressionContext, null);
                 }
 
                 // method(param1, ..)

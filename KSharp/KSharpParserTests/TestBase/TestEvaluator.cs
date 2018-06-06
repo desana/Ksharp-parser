@@ -34,9 +34,9 @@ namespace KSharpParserTests
 
             evaluatorMock = new Mock<INodeEvaluator>();
 
-            evaluatorMock.Setup(m => m.InvokeMethodForObject("\"aaa\"", "ToUpper", new object[] { })).Returns("AAA");
+            evaluatorMock.Setup(m => m.InvokeMember("\"aaa\"", "ToUpper", new object[] { })).Returns("AAA");
             evaluatorMock.Setup(m => m.InvokeMethod("ToUpper", new object[] { "aaa" })).Returns("AAA");
-            evaluatorMock.Setup(m => m.InvokeMethodForObject(5, "ToString", new object[] { })).Returns("5");
+            evaluatorMock.Setup(m => m.InvokeMember(5, "ToString", new object[] { })).Returns("5");
 
             evaluatorMock.Setup(m => m.InvokeMethod("ToDouble", new object[] { "2.45", 0, "en-us" })).Returns(2.45);
             evaluatorMock.Setup(m => m.InvokeMethod("ToDouble", new object[] { "2,45", 0, "cs-cz" })).Returns(2.45);
@@ -50,18 +50,21 @@ namespace KSharpParserTests
 
             evaluatorMock.Setup(m => m.InvokeMethod("List", new object[] { 1, 2, 3, 4, 4, 5, 4 })).Returns(new ArrayList { 1, 2, 3, 4, 4, 5, 4 });
 
-            evaluatorMock.Setup(m => m.InvokeMethodForObject("l", "toupper", new object[] { })).Returns("L");
+            evaluatorMock.Setup(m => m.InvokeMember("l", "toupper", new object[] { })).Returns("L");
 
             evaluatorMock.Setup(m => m.InvokeMethod("GetDict", new object[] { })).Returns(new Dictionary<string, int>()
             {
                 { "one", 1 }
             });
 
-            evaluatorMock.Setup(m => m.InvokeMethod("print", It.IsAny<object[]>())).Returns<string, object[]>((methodName, objectToPrint) => consoleOutput += Convert.ToString(objectToPrint[0]));
+            evaluatorMock.Setup(m => m.InvokeMethod("print", It.IsAny<object[]>())).Returns<string, object[]>((methodName, objectToPrint) => {
+                consoleOutput += Convert.ToString(objectToPrint[0]);
+                return null;
+                });
             evaluatorMock.Setup(m => m.InvokeMethod("println", It.IsAny<object[]>())).Returns<string, object[]>((methodName, objectToPrint) => {
                 consoleOutput += Convert.ToString(objectToPrint[0]);
                 string temp = consoleOutput;
-                consoleOutput = "";
+                consoleOutput = null;
                 return temp;
             });
         }
@@ -79,15 +82,23 @@ namespace KSharpParserTests
         }
 
 
-        public object InvokeMethodForObject(object objectToCallMethodOn, string methodName, object[] arguments)
-        {
-            return evaluatorMock.Object.InvokeMethodForObject(objectToCallMethodOn, methodName, arguments);
-        }
-
-
         public void SaveParameter(string parameterName, object parameterValue)
         {
             Parameters.Add(parameterName, parameterValue);
+        }
+
+
+        public object FlushOutput()
+        {
+            var temp = consoleOutput;
+            consoleOutput = null;
+            return temp;
+        }
+
+
+        public object InvokeMember(object accessedObject, string propertyOrMethodName, object[] arguments)
+        {
+            return evaluatorMock.Object.InvokeMember(accessedObject, propertyOrMethodName, arguments);
         }
     }
 }

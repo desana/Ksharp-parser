@@ -20,6 +20,8 @@ namespace KSharpParserTests
         public void If_IsSuccessful_HasResult(string input, object expected)
         {
             var tree = GetParser(input).begin_expression();
+
+            Assert.IsNull(tree.exception);
             Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
         }
 

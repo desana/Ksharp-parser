@@ -18,9 +18,18 @@ namespace KSharpParserTests
         [TestCase("\"\" + ToDouble(\"2,45\", 0, \"cs-cz\")", "2.45")]
         [TestCase("\"\" + ToDouble(\"2,45\")", "2.45")]
 
+        [TestCase("Cache(\"string\".ToUpper())")]
+        [TestCase("DocumentName.ToString()")]
+        [TestCase("DocumentName.ToString(\"defaultValue\")")]
+        [TestCase("GlobalObjects.Users.RandomSelection().UserName")]
+        [TestCase("GlobalObjects.Users.Any(UserEnabled == false)")]
+        [TestCase("GlobalObjects.Users.GetItem(0).UserName")]       
+
         public void Method_IsSuccessful_HasResult(string input, object expected)
         {
             var tree = GetParser(input).begin_expression();
+
+            Assert.IsNull(tree.exception);
             Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
         }
 
@@ -30,6 +39,8 @@ namespace KSharpParserTests
         public void Method_InvariantCulture_IsSuccessful_HasDateTimeResult(string input, string expectedDate)
         {
             var tree = GetParser(input).begin_expression();
+
+            Assert.IsNull(tree.exception);
             Assert.AreEqual(DateTime.Parse(expectedDate), Visitor.GetFirstResult(tree));
         }
 
@@ -39,6 +50,8 @@ namespace KSharpParserTests
         public void Method_CzechCulture_IsSuccessful_HasDateTimeResult(string input, string expectedDate)
         {
             var tree = GetParser(input).begin_expression();
+
+            Assert.IsNull(tree.exception);
             Assert.AreEqual(DateTime.Parse(expectedDate, CultureInfo.GetCultureInfo("cs-cz")), Visitor.GetFirstResult(tree));
         }
 
@@ -47,6 +60,8 @@ namespace KSharpParserTests
         public void Method_IsSuccessful_HasTimeSpanResult(string input)
         {
             var tree = GetParser(input).begin_expression();
+
+            Assert.IsNull(tree.exception);
             Assert.AreEqual(TimeSpan.Parse("1:00:00"), Visitor.GetFirstResult(tree));
         }
     }

@@ -11,23 +11,23 @@ namespace KSharpParserTests.Visitor
         [TestFixture]
         public class BasicStructuresTests : KSharpTestBase
         {
-            [TestCase("true", true)]
-            [TestCase("false", false)]
+            static object[] BasicStructuresSource =
+            {
+                new object[] { "true", true },
+                new object[] { "false", false },
+                new object[] { "1", 1 },
+                new object[] {"-1", -1 },
+                new object[] { "98746311", 98746311 },
+                new object[] { "-98746311", -98746311 },
+                new object[] { "3.465e-5", 3.465e-5 },
+                new object[] { "3.465e+5", 3.465e+5},
+                new object[] {"3.456", 3.456m},
+                new object[] { "30.4%", 0.304 },
+                new object[] { "30%", 0.30 },
+                new object[] { "\"String\"", "String"}
+            };
 
-            [TestCase("1", 1)]
-            [TestCase("98746311", 98746311)]
-
-            [TestCase("-1", -1)]
-            [TestCase("-98746311", -98746311)]
-
-            [TestCase("3.465e-5", 3.465e-5)]
-            [TestCase("3.465e+5", 3.465e+5)]
-            [TestCase("3.465", 3.456)]
-
-            [TestCase("30%", 0.30)]
-            [TestCase("30.4%", 0.304)]
-
-            [TestCase("\"String\"", "String")]
+            [TestCaseSource("BasicStructuresSource")]         
             public void BasicStructures_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
@@ -41,6 +41,8 @@ namespace KSharpParserTests.Visitor
             public void BasicStructures_IsSuccessful_NoResult(string input)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.IsNull(Visitor.GetResultList(tree));
             }
         }
@@ -59,9 +61,12 @@ namespace KSharpParserTests.Visitor
             [TestCase("@\"This string displays as is. No newlines\n, tabs\t or backslash-escapes\\.\"", "@\"This string displays as is. No newlines\n, tabs\t or backslash-escapes\\.")]
 
             [TestCase("\"<br>\"", "<br>")]
+            [TestCase("\"string\" + 5", "string5")]
             public void String_IsSuccessful_HasResult(string input, string expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
 
@@ -71,6 +76,8 @@ namespace KSharpParserTests.Visitor
             public void String_IsSuccessful_HasResult(string input)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.IsNull(Visitor.GetResultList(tree));
             }
 
@@ -81,7 +88,8 @@ namespace KSharpParserTests.Visitor
             [TestCase("@\"\"")]
             public void String_NotSuccessful_ThrowsInputMismatch(string input)
             {
-                Assert.Throws<InputMismatchException>(() => Visitor.GetFirstResult(GetParser(input).begin_expression()));
+                var tree = GetParser(input).begin_expression();
+                Assert.AreEqual(typeof(InputMismatchException), tree.exception.GetType());
             }
 
 
@@ -102,6 +110,7 @@ namespace KSharpParserTests.Visitor
             {
                 var tree = GetParser(input).begin_expression();
 
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(new Guid("0362d604-e293-496e-a73f-abdf522ce31d"), Visitor.GetFirstResult(tree));
             }
         }
@@ -116,6 +125,7 @@ namespace KSharpParserTests.Visitor
             {
                 var tree = GetParser(input).begin_expression();
 
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(new DateTime(2012, 12, 12), Visitor.GetFirstResult(tree));
             }
         }
