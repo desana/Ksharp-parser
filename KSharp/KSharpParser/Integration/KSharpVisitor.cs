@@ -363,10 +363,10 @@ namespace KSharp
 
         #region "Comparison methods"
 
-        private IComparer GetComparer(object left, object right)
+        private IComparer GetComparer(object leftOperand, object rightOperand)
         {
-            Type leftType = left?.GetType();
-            Type rightType = right?.GetType();
+            Type leftType = leftOperand?.GetType();
+            Type rightType = rightOperand?.GetType();
 
             if (leftType == null || rightType == null)
             {
@@ -400,8 +400,8 @@ namespace KSharp
             IComparer comparer = mEvaluator
             .KnownComparers
             .Where(comp => type.IsAssignableFrom(comp.Key))
-            .Cast<IComparer>()
             .FirstOrDefault()
+            .Value
             ?? Comparer.Default;
 
             return comparer;
@@ -1346,8 +1346,10 @@ namespace KSharp
                         expStart = EvaluateAccessor(expStart, subExpressionContext, nextChildContext);
                         i++;
                     }
-
-                    expStart = EvaluateAccessor(expStart, subExpressionContext, null);
+                    else
+                    {
+                        expStart = EvaluateAccessor(expStart, subExpressionContext, null);
+                    }
                 }
 
                 // method(param1, ..)
