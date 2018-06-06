@@ -2,6 +2,9 @@
 
 namespace KSharp
 {
+    /// <summary>
+    /// Converts numeric values into decimal and compares them.
+    /// </summary>
     internal class NumericComparer : ComparerBase<object>
     {
         public override int Compare(object leftOperand, object rightOperand)

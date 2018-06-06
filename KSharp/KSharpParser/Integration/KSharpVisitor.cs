@@ -229,10 +229,18 @@ namespace KSharp
 
             var index = VisitBracket_expression(context as Bracket_expressionContext);
 
-            var collection = GetVariable(collectionName);
+            var collection = IsIdentifier(collectionName) ? GetVariable(collectionName) : collectionName;
             if (index is int)
             {
-                result = (collection as IList)[(int)index];
+                if (collection is string)
+                {
+                    // need to remove quotes first
+                    result = (collection as string).Trim('\"')[(int)index];
+                }
+                else
+                {
+                    result = (collection as IList)[(int)index];
+                }
             }
             else
             {
@@ -256,6 +264,11 @@ namespace KSharp
         {
             var propertyOrMethodName = (string)VisitMember_access(acessorContext as Member_accessContext);
             var arguments = VisitMethod_invocation(argumentsContext as Method_invocationContext) as object[];
+
+            if (IsIdentifier(accessedObject))
+            {
+                accessedObject = GetVariable(accessedObject.ToString());
+            }
 
             return mEvaluator.InvokeMember(accessedObject, propertyOrMethodName, arguments);  
         }
@@ -504,8 +517,16 @@ namespace KSharp
         /// </summary>
         /// <param name="context">Context of the parser rule.</param>
         /// <returns>String value.</returns>
-        public override object VisitString_literal([NotNull] String_literalContext context) 
-            => context.GetText();
+        public override object VisitString_literal([NotNull] String_literalContext context)
+        {
+            var verb = context.VERBATIUM_STRING();
+            if (verb != null)
+            {
+                return verb.GetText().Trim('@'); ;
+            }
+
+            return context.GetText();
+        }
 
 
         /// <summary>

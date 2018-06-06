@@ -58,10 +58,14 @@ namespace KSharpParserTests.Visitor
             [TestCase("\"\" + 23.05", "23.05")]
             [TestCase("\"\" + False", "False")]
 
-            [TestCase("@\"This string displays as is. No newlines\n, tabs\t or backslash-escapes\\.\"", "@\"This string displays as is. No newlines\n, tabs\t or backslash-escapes\\.")]
+            [TestCase("@\"This string displays as is. No newlines\n, tabs\t or backslash-escapes\\.\"", "This string displays as is. No newlines\n, tabs\t or backslash-escapes\\.")]
 
             [TestCase("\"<br>\"", "<br>")]
             [TestCase("\"string\" + 5", "string5")]
+            [TestCase("\"\\\"\"", "\\")]
+            [TestCase("\"String\" \"AnotherString\"", "String")]
+            [TestCase("@\"\"", "")]
+            [TestCase("\"\"", "")]
             public void String_IsSuccessful_HasResult(string input, string expected)
             {
                 var tree = GetParser(input).begin_expression();
@@ -72,24 +76,13 @@ namespace KSharpParserTests.Visitor
 
 
             [TestCase("")]
-            [TestCase(" ")]
+            [TestCase(" ")]            
             public void String_IsSuccessful_HasResult(string input)
             {
                 var tree = GetParser(input).begin_expression();
 
                 Assert.IsNull(tree.exception);
                 Assert.IsNull(Visitor.GetResultList(tree));
-            }
-
-
-            [TestCase("\"String\" \"AnotherString\"")]
-            [TestCase("\"\"")]
-            [TestCase("\"\\\"\"")]
-            [TestCase("@\"\"")]
-            public void String_NotSuccessful_ThrowsInputMismatch(string input)
-            {
-                var tree = GetParser(input).begin_expression();
-                Assert.AreEqual(typeof(InputMismatchException), tree.exception.GetType());
             }
 
 

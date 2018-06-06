@@ -48,9 +48,12 @@ namespace KSharpParserTests
             evaluatorMock.Setup(m => m.InvokeMethod("ToDateTime", new object[] { "10.5.2010" })).Returns(DateTime.Parse("10.5.2010", CultureInfo.GetCultureInfo("cs-cz")));
             evaluatorMock.Setup(m => m.InvokeMethod("ToDateTime", new object[] { "31.12.2017 11:59 PM" })).Returns(DateTime.Parse("31.12.2017 11:59 PM", CultureInfo.GetCultureInfo("cs-cz")));
 
-            evaluatorMock.Setup(m => m.InvokeMethod("List", new object[] { 1, 2, 3, 4, 4, 5, 4 })).Returns(new ArrayList { 1, 2, 3, 4, 4, 5, 4 });
+            evaluatorMock.Setup(m => m.InvokeMethod("List", It.IsAny < object[]>()))
+            .Returns<string, object[]>((name, items) => items as IList);
 
-            evaluatorMock.Setup(m => m.InvokeMember("l", "toupper", new object[] { })).Returns("L");
+            evaluatorMock
+                .Setup(m => m.InvokeMember(It.IsAny<object>(), "toupper", It.IsAny<object[]>()))
+                .Returns<object, string, object[]>((word, methodName, args) => { return (word.ToString()).ToUpper();});
 
             evaluatorMock.Setup(m => m.InvokeMethod("GetDict", new object[] { })).Returns(new Dictionary<string, int>()
             {

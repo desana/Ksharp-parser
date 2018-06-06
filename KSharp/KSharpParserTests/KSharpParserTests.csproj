@@ -81,7 +81,7 @@
     <Compile Include="Visitor\DataTypeTests.cs" />
     <Compile Include="Visitor\IfTests.cs" />
     <Compile Include="Visitor\LambdaTests.cs" />
-    <Compile Include="Visitor\MethodTests.cs" />
+    <Compile Include="Visitor\AcessorTests.cs" />
     <Compile Include="Visitor\OutputTests.cs" />
     <Compile Include="Visitor\ParameterTests.cs" />
     <Compile Include="TestBase\KSharpTestBase.cs" />

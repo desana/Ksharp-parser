@@ -17,6 +17,7 @@ namespace KSharpParserTests
 
         public KSharpVisitor Visitor { get; private set; }
 
+
         [SetUp]
         public void SetUp()
         {

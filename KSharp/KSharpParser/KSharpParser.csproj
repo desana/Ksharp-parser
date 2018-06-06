@@ -68,7 +68,6 @@
     <Compile Include="Integration\Comparers\NullComparer.cs" />
     <Compile Include="Integration\Comparers\NumericComparer.cs" />
     <Compile Include="Integration\OperatorTypeEnum.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
