@@ -43,9 +43,9 @@ namespace KSharpParserTests
             [TestCase("\"\" + ToDouble(\"2,45\", 0, \"cs-cz\")", "2.45")]
             [TestCase("\"\" + ToDouble(\"2,45\")", "2.45")]
 
-            [TestCase("Cache(\"string\".ToUpper())")]
-            [TestCase("DocumentName.ToString()")]
-            [TestCase("DocumentName.ToString(\"defaultValue\")")]
+            [TestCase("Cache(\"string\".ToUpper())", "STRING")]
+            [TestCase("DocumentName.ToString()", "This is sparta!")]
+            [TestCase("DocumentName2.ToString(\"defaultValue\")", "defaultValue")]
 
             public void Method_IsSuccessful_HasResult(string input, object expected)
             {
@@ -92,25 +92,24 @@ namespace KSharpParserTests
         [TestFixture]
         public class PropertyTests : KSharpTestBase
         {
-            [TestCase("GlobalObjects.Users")]
-            [TestCase("GlobalObjects.Users.GetItem")]
+            [TestCase("string.Empty.Length", 0)]
+            [TestCase("string.Empty", "")]
             public void Method_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
-
+                
                 Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
         }
 
-
         [TestFixture]
         public class MixedTests : KSharpTestBase
         {
-            [TestCase("GlobalObjects.Users.RandomSelection().UserName")]
-            [TestCase("GlobalObjects.Users.Any(UserEnabled == false)")]
-            [TestCase("GlobalObjects.Users.GetItem(0).UserName")]
-            [TestCase("GlobalObjects.Users.GetItem(0)[1].UserName")]
+            [TestCase("GlobalObjects.Users.RandomSelection().UserName", "John Doe")]
+            [TestCase("GlobalObjects.Users.Any(UserEnabled == false)", "Jack Nenabled")]
+            [TestCase("GlobalObjects.Users.GetItem(0).UserName", "Echo from Dollhouse")]
+            [TestCase("GlobalObjects.Users[1].UserName", "Alpha from Dollhouse")]
 
             public void Method_IsSuccessful_HasResult(string input, object expected)
             {
