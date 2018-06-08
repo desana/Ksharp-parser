@@ -51,6 +51,15 @@ namespace KSharp
 
         
         /// <summary>
+        /// Invokes indexer on object
+        /// </summary>
+        /// <param name="collection">Collection to invoke on.</param>
+        /// <param name="index">Index value.</param>
+        /// <returns></returns>
+        object InvokeIndexer(object collection, object index);
+
+
+        /// <summary>
         /// Flushes output stream.
         /// </summary>
         /// <returns>Output stream.</returns>

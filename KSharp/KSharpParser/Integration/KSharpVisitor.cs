@@ -221,44 +221,17 @@ namespace KSharp
 
             return EvaluateMethodCall(methodName, arguments);
         }
-        
+
 
         private object EvaluateIndexer(object collectionNameOrInstance, IParseTree context)
         {
-            object result = null;
-
             var index = VisitBracket_expression(context as Bracket_expressionContext);
-                        
+
             var collection = IsIdentifier(collectionNameOrInstance) ? GetVariable(collectionNameOrInstance as string) : collectionNameOrInstance;
-            if (index is int)
-            {
-                if (collection is string)
-                {
-                    // need to remove quotes first
-                    result = (collection as string).Trim('\"')[(int)index];
-                }
-                else
-                {
-                    result = (collection as IList)[(int)index];
-                }
-            }
-            else
-            {
-                string stringIndex = ((string)index).Trim('"');
 
-                if (collection is DataRow)
-                {
-                    result = (collection as DataRow)[stringIndex];
-                }
-                else
-                {
-                    result = (collection as IDictionary)[stringIndex];
-                }
-            }
-
-            return result;
+            return mEvaluator.InvokeIndexer(collection, index);
         }
-        
+                   
 
         private object EvaluateAccessor(object accessedObject, IParseTree acessorContext, IParseTree argumentsContext)
         {

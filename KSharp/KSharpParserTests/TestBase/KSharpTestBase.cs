@@ -106,14 +106,24 @@ namespace KSharpParserTests
 
             EvaluatorMock.Setup(m => m.InvokeMember("FirstUser", "UserName", null)).Returns("Echo from Dollhouse");
 
-
             EvaluatorMock.Setup(m => m.GetVariableValue("UserEnabled")).Returns(true);
             EvaluatorMock.Setup(m => m.InvokeMember("Users", "Any", new object[] { false })).Returns("Jack Nenabled");
-
-
-            EvaluatorMock.Setup(m => m.GetVariableValue("s")).Returns("s");
+            
+            EvaluatorMock.Setup(m => m.InvokeIndexer("Users", 1)).Returns('s');
             EvaluatorMock.Setup(m => m.InvokeMember('s', "UserName", null)).Returns("Alpha from Dollhouse");
 
+            EvaluatorMock.Setup(m => m.InvokeIndexer("\"hello\"", 1)).Returns('e');
+                        
+            EvaluatorMock.Setup(m => m.InvokeIndexer(new Dictionary<string, int>()
+            {
+                { "one", 1 }
+            }, "one")).Returns(1);
+
+            EvaluatorMock.Setup(m => m.InvokeIndexer(It.IsAny<IList>(), It.IsAny<int>())).Returns<IList, int>((collection, index) =>
+            {
+                return collection[index];
+            });
+            
             Visitor = new KSharpVisitor(EvaluatorMock.Object);
         }
         
@@ -127,31 +137,6 @@ namespace KSharpParserTests
 
             KSharpGrammarParser parser = new KSharpGrammarParser(commonTokenStream);
             return parser;
-        }
-
-        internal class GlobalObjects
-        {
-            ArrayList Users;
-
-            public GlobalObjects()
-            {
-                Users = new ArrayList
-                {
-                    new User("Echo from Dollhouse"),
-                    new User("Alpha from Dollhouse")
-
-                };
-            }
-        }
-
-        internal class User
-        {
-            public string UserName;
-
-            public User(string name)
-            {
-                UserName = name;
-            }
         }
     }
 }
