@@ -73,8 +73,8 @@ namespace KSharpParserTests.Visitor
 
 
             [TestCase("x = 5; cond = null; while (cond) { x = 10; }; x")]
-            [TestCase("while (true) { x += 1; }")]
-            [TestCase("while (true) print(x.y)")]
+            [TestCase("while (x) { x += 1; }")]
+            [TestCase("while (x.y) print(x.y)")]
             [TestCase("while (if (z<10) {a++}) {++z} ")]
             [TestCase("while (z<10) {++z} ")]
             [TestCase("y = while (z<10) {++z} ")]

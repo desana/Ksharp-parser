@@ -43,7 +43,7 @@ namespace KSharpParserTests
             [TestCase("\"\" + ToDouble(\"2,45\", 0, \"cs-cz\")", "2.45")]
             [TestCase("\"\" + ToDouble(\"2,45\")", "2.45")]
 
-            [TestCase("Cache(\"string\".ToUpper())", "STRING")]
+            [TestCase("Cache(\"string\".ToUpper())", "STRING - Cached")]
             [TestCase("DocumentName.ToString()", "This is sparta!")]
             [TestCase("DocumentName2.ToString(\"defaultValue\")", "defaultValue")]
 
@@ -94,7 +94,7 @@ namespace KSharpParserTests
         {
             [TestCase("string.Empty.Length", 0)]
             [TestCase("string.Empty", "")]
-            public void Method_IsSuccessful_HasResult(string input, object expected)
+            public void Property_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
                 
@@ -111,7 +111,7 @@ namespace KSharpParserTests
             [TestCase("GlobalObjects.Users.GetItem(0).UserName", "Echo from Dollhouse")]
             [TestCase("GlobalObjects.Users[1].UserName", "Alpha from Dollhouse")]
 
-            public void Method_IsSuccessful_HasResult(string input, object expected)
+            public void Mixed_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
 

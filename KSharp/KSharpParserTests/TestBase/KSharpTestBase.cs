@@ -70,13 +70,50 @@ namespace KSharpParserTests
                 consoleOutput += Convert.ToString(objectToPrint[0]);
                 return null;
             });
+
             EvaluatorMock.Setup(m => m.InvokeMethod("println", It.IsAny<object[]>())).Returns<string, object[]>((methodName, objectToPrint) => {
                 consoleOutput += Convert.ToString(objectToPrint[0]);
                 string temp = consoleOutput;
                 consoleOutput = null;
                 return temp;
             });
+
+            EvaluatorMock.Setup(m => m.GetVariableValue("string")).Returns(typeof(string));
+            EvaluatorMock.Setup(m => m.InvokeMember(typeof(string), "Empty", null)).Returns(string.Empty);
+
+            EvaluatorMock.Setup(m => m.InvokeMember(string.Empty, "Length", null)).Returns(0);
             
+            EvaluatorMock.Setup(m => m.GetVariableValue("DocumentName")).Returns("This is sparta!");
+            EvaluatorMock.Setup(m => m.InvokeMember("This is sparta!", "ToString", new object[] { })).Returns("This is sparta!");
+            
+            EvaluatorMock.Setup(m => m.GetVariableValue("DocumentName2")).Returns("This is sparta!");
+            EvaluatorMock.Setup(m => m.InvokeMember("This is sparta!", "ToString", new object[] {"defaultValue" })).Returns("defaultValue");
+            
+            EvaluatorMock.Setup(m => m.InvokeMember("\"string\"", "ToUpper", new object[] { })).Returns("STRING");
+            EvaluatorMock.Setup(m => m.InvokeMethod("Cache", new object[] { "STRING" })).Returns("STRING - Cached");
+
+            EvaluatorMock.Setup(m => m.GetVariableValue("GlobalObjects")).Returns("GlobalObjects");
+            EvaluatorMock.Setup(m => m.InvokeMember("GlobalObjects", "Users", null)).Returns("Users");
+
+            EvaluatorMock.Setup(m => m.GetVariableValue("Users")).Returns("Users");
+            EvaluatorMock.Setup(m => m.InvokeMember("Users", "RandomSelection", new object[] { })).Returns("RandomName");
+
+            EvaluatorMock.Setup(m => m.GetVariableValue("RandomName")).Returns("RandomName");
+            EvaluatorMock.Setup(m => m.InvokeMember("RandomName", "UserName", null)).Returns("John Doe");
+
+            EvaluatorMock.Setup(m => m.InvokeMember("Users", "GetItem", new object[] { 0 })).Returns("FirstUser");
+            EvaluatorMock.Setup(m => m.GetVariableValue("FirstUser")).Returns("FirstUser");
+
+            EvaluatorMock.Setup(m => m.InvokeMember("FirstUser", "UserName", null)).Returns("Echo from Dollhouse");
+
+
+            EvaluatorMock.Setup(m => m.GetVariableValue("UserEnabled")).Returns(true);
+            EvaluatorMock.Setup(m => m.InvokeMember("Users", "Any", new object[] { false })).Returns("Jack Nenabled");
+
+
+            EvaluatorMock.Setup(m => m.GetVariableValue("s")).Returns("s");
+            EvaluatorMock.Setup(m => m.InvokeMember('s', "UserName", null)).Returns("Alpha from Dollhouse");
+
             Visitor = new KSharpVisitor(EvaluatorMock.Object);
         }
         
@@ -90,6 +127,31 @@ namespace KSharpParserTests
 
             KSharpGrammarParser parser = new KSharpGrammarParser(commonTokenStream);
             return parser;
+        }
+
+        internal class GlobalObjects
+        {
+            ArrayList Users;
+
+            public GlobalObjects()
+            {
+                Users = new ArrayList
+                {
+                    new User("Echo from Dollhouse"),
+                    new User("Alpha from Dollhouse")
+
+                };
+            }
+        }
+
+        internal class User
+        {
+            public string UserName;
+
+            public User(string name)
+            {
+                UserName = name;
+            }
         }
     }
 }

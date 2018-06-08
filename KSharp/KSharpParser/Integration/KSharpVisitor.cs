@@ -223,13 +223,13 @@ namespace KSharp
         }
         
 
-        private object EvaluateIndexer(string collectionName, IParseTree context)
+        private object EvaluateIndexer(object collectionNameOrInstance, IParseTree context)
         {
             object result = null;
 
             var index = VisitBracket_expression(context as Bracket_expressionContext);
-
-            var collection = IsIdentifier(collectionName) ? GetVariable(collectionName) : collectionName;
+                        
+            var collection = IsIdentifier(collectionNameOrInstance) ? GetVariable(collectionNameOrInstance as string) : collectionNameOrInstance;
             if (index is int)
             {
                 if (collection is string)
@@ -263,9 +263,9 @@ namespace KSharp
         private object EvaluateAccessor(object accessedObject, IParseTree acessorContext, IParseTree argumentsContext)
         {
             var propertyOrMethodName = (string)VisitMember_access(acessorContext as Member_accessContext);
-            var arguments = VisitMethod_invocation(argumentsContext as Method_invocationContext) as object[];
+            var arguments = argumentsContext == null ? null :VisitMethod_invocation(argumentsContext as Method_invocationContext) as object[];
 
-            if (IsIdentifier(accessedObject))
+            if (IsIdentifier(accessedObject) && (string)accessedObject != String.Empty)
             {
                 accessedObject = GetVariable(accessedObject.ToString());
             }
@@ -1355,7 +1355,7 @@ namespace KSharp
                 // collection[5] or collection["key"]
                 if (subExpressionContext is Bracket_expressionContext)
                 {
-                    expStart = EvaluateIndexer((string)expStart, subExpressionContext);
+                    expStart = EvaluateIndexer(expStart, subExpressionContext);
                 }
 
                 // member.property.access
