@@ -89,7 +89,7 @@ if_expression
 	; 
 
 assignment 
-	: IDENTIFIER assignment_operator assignable_expression	
+	: IDENTIFIER assignment_operator assignable_expression
 	| INC IDENTIFIER
 	| DEC IDENTIFIER
 	| IDENTIFIER DEC
@@ -287,6 +287,7 @@ boolean_literal
 string_literal
 	: REGULAR_STRING
 	| VERBATIUM_STRING
+	| EMPTY_STRING
 	;
 
 method_member_name
@@ -387,6 +388,8 @@ IDENTIFIER:				 '@'? IdentifierOrKeyword;
 CHARACTER_LITERAL:	     [A-F] | [a-f];
 REGULAR_STRING:                      '"'  (~["\\\r\n\u0085\u2028\u2029] | CommonCharacter)* '"';
 VERBATIUM_STRING:                    '@"' (~'"' | '""')* '"';
+EMPTY_STRING : '""';
+
 
 REAL_LITERAL:            [0-9]* '.' [0-9]+ ExponentPart? [FfDdMm]? | [0-9]+ ([FfDdMm] | ExponentPart [FfDdMm]?);
 INTEGER_LITERAL:         [0-9]+ IntegerTypeSuffix?;
@@ -406,8 +409,6 @@ GuidEnd: ([A-Z] | [a-z] | [0-9])   ([A-Z] | [a-z] | [0-9])   ([A-Z] | [a-z] | [0
 //Stop
 NEWLINE: ('\r\n'|'\n'|'\r')  -> channel(HIDDEN);
 WS	: ' ' -> channel(HIDDEN);
-
-EMPTY_STRING : '""'-> channel(HIDDEN);
 
 COMMENT:  ( '//' .*? (NEWLINE | EOF) | '/*' .*? '*/') -> channel(HIDDEN);
 

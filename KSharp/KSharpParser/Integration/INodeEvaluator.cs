@@ -38,5 +38,15 @@ namespace KSharp
         /// <param name="arguments">Arguments of the method.</param>
         /// <returns>Return value of invoked method.</returns>
         object InvokeMethod(string methodName, object[] arguments);
+
+
+        /// <summary>
+        /// Invokes method for object.
+        /// </summary>
+        /// <param name="objectName">Object to invoke method on.</param>
+        /// <param name="methodName">Name of the method.</param>
+        /// <param name="arguments">Arguments of the method.</param>
+        /// <returns>Return value of invoked method.</returns>
+        object InvokeMethodForObject(object objectToCallMethodOn, string methodName, object[] arguments);
     }
 }
