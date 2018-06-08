@@ -30,18 +30,20 @@ namespace KSharpParserTests.Visitor
             [TestCase(@"1==1 && ""a""==""a""", true)]
             [TestCase(@"1==1 and ""a""==""a""", true)]
             [TestCase(@"1==1 || ""a""==""a""", true)]
-            [TestCase(@"1==0 or ""a""==""a""", false)]
+            [TestCase(@"1==0 or ""a""==""a""", true)]
             [TestCase(@"1==0 or ""a""==""b""", false)]
 
             [TestCase(@"1==0 && 2==2", false)]
             [TestCase(@"1==0 and 2==2", false)]
             [TestCase(@"1==0 || 1==2", false)]
+            [TestCase(@"null==null", true)]
 
             [TestCase("i = 4; ((i mod 2) == 0)", true)]
             public void Logical_IsSuccessful_HasResult(string input, bool expected)
             {
                 var tree = GetParser(input).begin_expression();
 
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
         }
@@ -78,6 +80,8 @@ namespace KSharpParserTests.Visitor
             public void Arithmetic_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
         }
@@ -91,6 +95,8 @@ namespace KSharpParserTests.Visitor
             public void TernaryOperator_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
 

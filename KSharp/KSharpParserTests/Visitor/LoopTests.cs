@@ -21,6 +21,8 @@ namespace KSharpParserTests.Visitor
             public void For_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetResultList(tree));
             }
 
@@ -29,6 +31,8 @@ namespace KSharpParserTests.Visitor
             public void For_IsSuccessful_NoResult(string input)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.IsNull(Visitor.GetResultList(tree));
             }
         }
@@ -38,12 +42,14 @@ namespace KSharpParserTests.Visitor
         public class WhileTests : KSharpTestBase
         {
             [TestCase("z = 1; while (z<10) {++z}; z", new object[] { 10 })]
-            [TestCase("i = 1; while (i < 4) {print(i++)}; \"string\"", new object[] { "1234string" })]
-            [TestCase("i = 1; while (i < 4) {print(i++)}; return \"result\"", new object[] { "1234result" })]
+            [TestCase("i = 1; while (i < 4) {print(i);i++}; \"string\"", new object[] { "123string" })]
+            [TestCase("i = 1; while (i < 4) {print(i);i++;}; return \"result\"", new object[] { "123result" })]
             [TestCase("x = 0; while (x < 5) { x++; }; x", new object[] { 5 })]
             public void While_IsSuccessful(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetResultList(tree));
             }
 
@@ -53,6 +59,8 @@ namespace KSharpParserTests.Visitor
             public void While_IsSuccessful_NoResult(string input)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.IsNull(Visitor.GetResultList(tree));
             }
 
@@ -65,8 +73,8 @@ namespace KSharpParserTests.Visitor
 
 
             [TestCase("x = 5; cond = null; while (cond) { x = 10; }; x")]
-            [TestCase("while (true) { x += 1; }")]
-            [TestCase("while (true) print(x.y)")]
+            [TestCase("while (x) { x += 1; }")]
+            [TestCase("while (x.y) print(x.y)")]
             [TestCase("while (if (z<10) {a++}) {++z} ")]
             [TestCase("while (z<10) {++z} ")]
             [TestCase("y = while (z<10) {++z} ")]
@@ -86,6 +94,8 @@ namespace KSharpParserTests.Visitor
             public void Foreach_IsSuccessful(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetResultList(tree));
             }
         }

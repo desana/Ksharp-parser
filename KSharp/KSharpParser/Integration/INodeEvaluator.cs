@@ -41,12 +41,19 @@ namespace KSharp
 
 
         /// <summary>
-        /// Invokes method for object.
+        /// Invokes member of the object.
         /// </summary>
-        /// <param name="objectName">Object to invoke method on.</param>
-        /// <param name="methodName">Name of the method.</param>
-        /// <param name="arguments">Arguments of the method.</param>
-        /// <returns>Return value of invoked method.</returns>
-        object InvokeMethodForObject(object objectToCallMethodOn, string methodName, object[] arguments);
+        /// <param name="objectName">Object to invoke member on.</param>
+        /// <param name="methodName">Name of the member.</param>
+        /// <param name="arguments">Arguments, if the member is a method, otherwise the argument is <c>null</c>.</param>
+        /// <returns>Return value of invoked member.</returns>
+        object InvokeMember(object accessedObject, string propertyOrMethodName, object[] arguments);
+
+        
+        /// <summary>
+        /// Flushes output stream.
+        /// </summary>
+        /// <returns>Output stream.</returns>
+        object FlushOutput();
     }
 }

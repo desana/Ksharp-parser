@@ -1,5 +1,6 @@
 ﻿using Antlr4.Runtime;
 using NUnit.Framework;
+using System;
 
 namespace KSharpParserTests.Visitor
 {
@@ -16,6 +17,8 @@ namespace KSharpParserTests.Visitor
             public void BasicAssignment_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
 
@@ -26,6 +29,8 @@ namespace KSharpParserTests.Visitor
             public void BasicAssignment_IsSuccessful_NoResult(string input)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.IsNull(Visitor.GetResultList(tree));
             }
 
@@ -35,7 +40,7 @@ namespace KSharpParserTests.Visitor
             public void BasicAssignment_NotSuccessful_ThrowsInputMismatch(string input)
             {
                 var tree = GetParser(input).begin_expression();
-                Assert.Throws<InputMismatchException>(() => Visitor.GetResultList(tree));
+                Assert.AreEqual(typeof(InputMismatchException), tree.exception.GetType());
             }
         }
 
@@ -52,10 +57,21 @@ namespace KSharpParserTests.Visitor
             [TestCase("Variable = 1; Variable -= 2; Variable", -1)]
             [TestCase("Variable = 1; Variable *= 2; Variable", 2)]
             [TestCase("Variable = 1; Variable /= 2; Variable", 0.5)]
-            public void BasicAssignment_IsSuccessful_HasResult(string input, object expected)
+            public void AdvancedAssignment_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
+            }
+
+            [TestCase("Variable += 2;")]
+            [TestCase("Variable++;")]
+            public void AdvancedAssignment_NotSuccessful_ThrowsNullReference(string input)
+            {
+                var tree = GetParser(input).begin_expression();
+
+                Assert.Throws<NullReferenceException>(() => Visitor.GetFirstResult(tree));
             }
         }
     }

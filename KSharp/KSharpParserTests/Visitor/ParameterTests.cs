@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
 
 namespace KSharpParserTests
 {
@@ -14,12 +15,12 @@ namespace KSharpParserTests
         public void Parameter_AreSaved(string input, string expectedKey, object expectedValue)
         {
             var tree = GetParser(input).begin_expression();
+
+            Assert.IsNull(tree.exception);
+
             Visitor.Visit(tree);
 
-            object value;
-            NodeEvaluator.Parameters.TryGetValue(expectedKey, out value);
-
-            Assert.AreEqual(expectedValue, value);
+            EvaluatorMock.Verify(m => m.SaveParameter(expectedKey, expectedValue), Times.Once());
         }
     }
 }

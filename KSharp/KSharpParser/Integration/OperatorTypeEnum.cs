@@ -95,8 +95,7 @@ namespace KSharp
         /// </summary>
         BANG,
 
-        #endregion
-        
+        #endregion        
 
         /// <summary>
         /// Represents default value, when none of the operators is matched.
