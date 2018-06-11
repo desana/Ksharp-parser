@@ -11,7 +11,7 @@ namespace KSharpParserTests.Visitor
         [TestFixture]
         public class BasicStructuresTests : KSharpTestBase
         {
-            static object[] BasicStructuresSource =
+            static readonly object[] BasicStructuresSource =
             {
                 new object[] { "true", true },
                 new object[] { "false", false },
@@ -31,6 +31,8 @@ namespace KSharpParserTests.Visitor
             public void BasicStructures_IsSuccessful_HasResult(string input, object expected)
             {
                 var tree = GetParser(input).begin_expression();
+				
+                Assert.IsNull(tree.exception);
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
 

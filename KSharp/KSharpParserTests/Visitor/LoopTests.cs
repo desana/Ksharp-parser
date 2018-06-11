@@ -99,5 +99,18 @@ namespace KSharpParserTests.Visitor
                 Assert.AreEqual(expected, Visitor.GetResultList(tree));
             }
         }
+
+
+        [TestFixture]
+        public class InfiniteTests : KSharpTestBase
+        {
+            [TestCase("while(true){5;}")]
+            [TestCase("for (i = 0; i >= 0; i = 0){5;}")]
+            public void Foreach_IsSuccessful(string input)
+            {
+                Assert.Throws<OperationCanceledException>(() => Visitor.Visit(GetParser(input).begin_expression()));
+            }
+        }
+
     }
 }

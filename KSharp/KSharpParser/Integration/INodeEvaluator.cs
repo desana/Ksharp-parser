@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace KSharp
 {
     /// <summary>
     /// Defines methods which need to be evaluated with the system context.
     /// </summary>
+    /// <remarks>
+    /// Method which may cause infinite loops should use <seealso cref="CancellationToken"/>.
+    /// </remarks>
     public interface INodeEvaluator
     {
         /// <summary>
@@ -43,13 +47,13 @@ namespace KSharp
         /// <summary>
         /// Invokes member of the object.
         /// </summary>
-        /// <param name="objectName">Object to invoke member on.</param>
-        /// <param name="methodName">Name of the member.</param>
+        /// <param name="accessedObject">Object to invoke member on.</param>
+        /// <param name="propertyOrMethodName">Name of the member.</param>
         /// <param name="arguments">Arguments, if the member is a method, otherwise the argument is <c>null</c>.</param>
         /// <returns>Return value of invoked member.</returns>
         object InvokeMember(object accessedObject, string propertyOrMethodName, object[] arguments);
 
-        
+
         /// <summary>
         /// Invokes indexer on object
         /// </summary>
@@ -64,5 +68,12 @@ namespace KSharp
         /// </summary>
         /// <returns>Output stream.</returns>
         object FlushOutput();
+
+
+        /// <summary>
+        /// Returns cancellation token with timer set to correct value.
+        /// </summary>
+        /// <returns>Cancellation token.</returns>
+        CancellationToken GetCancellationToken();
     }
 }

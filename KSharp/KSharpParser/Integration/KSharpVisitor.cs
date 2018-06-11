@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-
+using System.Threading;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
@@ -22,9 +22,13 @@ namespace KSharp
     {
         #region "Private properties"
 
-        private readonly INodeEvaluator mEvaluator;
-        
-        private Dictionary<string, object> mLocalVariables = new Dictionary<string, object>();
+        private readonly INodeEvaluator evaluator;
+
+        private CancellationToken? cancellationToken;
+
+        private CancellationToken Token => cancellationToken.Value;
+
+        private IDictionary<string, object> localVariables = new Dictionary<string, object>();
 
         private bool breakLoop = false;
 
@@ -32,8 +36,7 @@ namespace KSharp
 
         private bool returnFromLoop = false;
         
-        private List<Type> mNumericTypes = new List<Type>()
-        {
+        private static readonly Type[] mNumericTypes = new Type[] {
             typeof(int),
             typeof(double),
             typeof(long),
@@ -62,7 +65,7 @@ namespace KSharp
         /// <param name="evaluator">Instance of the evaluator.</param>
         public KSharpVisitor(INodeEvaluator evaluator)
         {
-            mEvaluator = evaluator;
+            this.evaluator = evaluator;
         }
 
 
@@ -73,13 +76,15 @@ namespace KSharp
         /// <param name="globalVariables">Variables from the visitor above.</param>
         /// <param name="parameterNames">Lambda parameter names.</param>
         /// <param name="parameterValues">Lambda parameter values.</param>
-        public KSharpVisitor(INodeEvaluator evaluator, Dictionary<string, object> globalVariables, string[] parameterNames, object[] parameterValues) : this(evaluator)
+        private KSharpVisitor(INodeEvaluator evaluator, IDictionary<string, object> globalVariables, string[] parameterNames, object[] parameterValues, CancellationToken cancellationToken) : this(evaluator)
         {
             InitGlobalVariables(globalVariables);
             if (parameterNames != null)
             {
                 InitLocalVariables(parameterNames, parameterValues);
             }
+
+            this.cancellationToken = cancellationToken;
         }
 
         #endregion
@@ -136,14 +141,14 @@ namespace KSharp
             foreach (var name in parameterNames)
             {
                 // check if parameter name is not same as some local variable
-                if (mLocalVariables.ContainsKey(name))
+                if (localVariables.ContainsKey(name))
                 {
                     throw new ArgumentException(name);
                 }
             }
 
-            var lambdaVisitor = new KSharpVisitor(mEvaluator, mLocalVariables, parameterNames, arguments);
-            Tuple<Dictionary<string, object>, object> result = lambdaVisitor.VisitLambda_body(lambdaBodyContext) as Tuple<Dictionary<string, object>, object>;
+            var lambdaVisitor = new KSharpVisitor(evaluator, localVariables, parameterNames, arguments, Token);
+            var result = lambdaVisitor.VisitLambda_body(lambdaBodyContext) as Tuple<IDictionary<string, object>, object>;
 
             // update variables which were changed within lambda
             UpdateLocalVariables(result.Item1);    
@@ -152,18 +157,18 @@ namespace KSharp
         }
 
         
-        private void UpdateLocalVariables(Dictionary<string, object> lambdaLocals)
+        private void UpdateLocalVariables(IDictionary<string, object> lambdaLocals)
         {
-            Dictionary<string, object> newLocals = new Dictionary<string, object>();
+            var newLocals = new Dictionary<string, object>();
 
-            foreach (var tuple in mLocalVariables)
+            foreach (var tuple in localVariables)
             {
                 lambdaLocals.TryGetValue(tuple.Key, out object newValue);
 
                 newLocals.Add(tuple.Key, newValue);
             }
 
-            mLocalVariables = newLocals;
+            localVariables = newLocals;
         }
 
 
@@ -181,12 +186,33 @@ namespace KSharp
         }
 
 
-        private void InitGlobalVariables(Dictionary<string, object> globalVariables)
+        private void InitGlobalVariables(IDictionary<string, object> globalVariables)
         {
             foreach (var variable in globalVariables)
             {
                 SetVariable(variable.Key, variable.Value);
             }
+        }
+        
+
+        private object VisitTreeBody(Begin_expressionContext context)
+        {
+            var results = VisitStatement_list(context.statement_list()) as IList;
+
+            var consoleOutput = evaluator.FlushOutput()?.ToString();
+            if (consoleOutput != null)
+            {
+                if (results != null)
+                {
+                    results.Add(consoleOutput);
+                }
+                else
+                {
+                    results = new List<object>() { consoleOutput };
+                }
+            }
+
+            return results;
         }
 
 
@@ -206,12 +232,12 @@ namespace KSharp
         private object EvaluateMethodCall(string methodName, object[] arguments)
         {
             // if method is lambda, evaluate lambda expression, otherwise use evaluator
-            if (mLocalVariables.TryGetValue(methodName, out object lambdaContext))
+            if (localVariables.TryGetValue(methodName, out object lambdaContext))
             {
                 return InvokeLambdaExpression(lambdaContext as Lambda_expressionContext, arguments as object[]);
             }
 
-            return mEvaluator.InvokeMethod(methodName as string, arguments);
+            return evaluator.InvokeMethod(methodName as string, arguments);
         }
 
 
@@ -229,7 +255,7 @@ namespace KSharp
 
             var collection = IsIdentifier(collectionNameOrInstance) ? GetVariable(collectionNameOrInstance as string) : collectionNameOrInstance;
 
-            return mEvaluator.InvokeIndexer(collection, index);
+            return evaluator.InvokeIndexer(collection, index);
         }
                    
 
@@ -243,7 +269,7 @@ namespace KSharp
                 accessedObject = GetVariable(accessedObject.ToString());
             }
 
-            return mEvaluator.InvokeMember(accessedObject, propertyOrMethodName, arguments);  
+            return evaluator.InvokeMember(accessedObject, propertyOrMethodName, arguments);  
         }
 
         #endregion
@@ -253,19 +279,19 @@ namespace KSharp
 
         private void SetVariable(string name, object value)
         {
-            mLocalVariables[name] = value;
+            localVariables[name] = value;
         }
 
 
         private object GetVariable(string name)
         {
-            if (mLocalVariables.TryGetValue(name, out object value))
+            if (localVariables.TryGetValue(name, out object value))
             {
                 return value;
             }
             else
             {
-                return mEvaluator.GetVariableValue(name);
+                return evaluator.GetVariableValue(name);
             }
         }
 
@@ -383,7 +409,7 @@ namespace KSharp
                 }
             }
 
-            IComparer comparer = mEvaluator
+            IComparer comparer = evaluator
             .KnownComparers
             .Where(comp => type.IsAssignableFrom(comp.Key))
             .FirstOrDefault()
@@ -448,7 +474,7 @@ namespace KSharp
                 parameterValue = VisitParameter_value(parameterValueContext);
             }
 
-            mEvaluator.SaveParameter(parameterName, parameterValue);
+            evaluator.SaveParameter(parameterName, parameterValue);
 
             return null;
         }
@@ -907,6 +933,8 @@ namespace KSharp
 
             while (conditionResult)
             {
+                Token.ThrowIfCancellationRequested();
+
                 if (VisitBlock(context.block()) is List<object> blockResult)
                 {
                     blockResult.ForEach(subResult => results.Add(subResult));
@@ -946,6 +974,8 @@ namespace KSharp
 
             while (conditionResult)
             {
+                Token.ThrowIfCancellationRequested();
+
                 if (VisitBlock(context.block()) is List<object> blockResult)
                 {
                     blockResult.ForEach(subResult => results.Add(subResult));
@@ -990,6 +1020,8 @@ namespace KSharp
 
             foreach (object item in collection)
             {
+                Token.ThrowIfCancellationRequested();
+
                 SetVariable(identifierName, item);
 
                 if (VisitBlock(context.block()) is List<object> blockResult)
@@ -1011,7 +1043,7 @@ namespace KSharp
 
             }
 
-            mLocalVariables.Remove(identifierName);
+            localVariables.Remove(identifierName);
 
             return results.Any() ? results : null; ;
         }
@@ -1111,7 +1143,7 @@ namespace KSharp
                 result = VisitBlock(bodyContext as BlockContext);
             }
 
-            return new Tuple<Dictionary<string, object>, object>(mLocalVariables, result);
+            return new Tuple<IDictionary<string, object>, object>(localVariables, result);
         }
 
         /// <summary>
@@ -1213,28 +1245,15 @@ namespace KSharp
         {
             var length = context.parameter().Length;
             for (int i = 0; i < length; i++)
-            { 
-                VisitParameter(context.parameter(i));                
-            }
-
-            var results = VisitStatement_list(context.statement_list()) as IList;
-
-            var consoleOutput = mEvaluator.FlushOutput()?.ToString();
-            if (consoleOutput != null)
             {
-                if (results != null)
-                { 
-                    results.Add(consoleOutput);
-                }
-                else
-                {
-                    results = new List<object>() { consoleOutput };
-                }
+                VisitParameter(context.parameter(i));
             }
 
-            return results;
-        }
+            cancellationToken = cancellationToken ?? evaluator.GetCancellationToken();
+            Token.ThrowIfCancellationRequested();
 
+            return VisitTreeBody(context);
+        }
 
         
         /// <summary>
@@ -1254,7 +1273,7 @@ namespace KSharp
                 var statementResult = VisitStatement(statement);
                 if (statementResult != null) {
 
-                    consoleOutput = mEvaluator.FlushOutput()?.ToString();
+                    consoleOutput = evaluator.FlushOutput()?.ToString();
 
                     if (statementResult is List<object>)
                     {

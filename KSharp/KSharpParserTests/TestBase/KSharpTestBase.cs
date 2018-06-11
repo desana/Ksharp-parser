@@ -123,6 +123,10 @@ namespace KSharpParserTests
             {
                 return collection[index];
             });
+
+            var ct = new CancellationTokenSource();
+            ct.CancelAfter(15000);
+            EvaluatorMock.Setup(m => m.GetCancellationToken()).Returns(ct.Token);
             
             Visitor = new KSharpVisitor(EvaluatorMock.Object);
         }
