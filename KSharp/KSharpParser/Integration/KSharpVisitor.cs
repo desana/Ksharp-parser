@@ -124,9 +124,9 @@ namespace KSharp
         /// Invokes and evaluates lambda expression given by <paramref name="context"/>.
         /// </summary>
         /// <param name="context">Context of the lambda expression.</param>
-        /// <param name="arguments">Lambda parameter values.</param>
+        /// <param name="parameters">Lambda parameter values.</param>
         /// <returns>Evaluated lambda expression.</returns>
-        private object InvokeLambdaExpression(Lambda_expressionContext context, object[] arguments)
+        private object InvokeLambdaExpression(Lambda_expressionContext context, object[] parameters)
         {
             var lambdaBodyContext = context.lambda_body();
             if (lambdaBodyContext == null)
@@ -135,16 +135,15 @@ namespace KSharp
             }
 
             var parameterNames = VisitLambda_signature(context.lambda_signature()) as string[];
-            foreach (var name in parameterNames)
+
+            // check if parameter name is not same as some local variable
+            var parametersWithSameName = parameterNames.Where(name => localVariables.ContainsKey(name));
+            if (parametersWithSameName.Any())
             {
-                // check if parameter name is not same as some local variable
-                if (localVariables.ContainsKey(name))
-                {
-                    throw new ArgumentException(name);
-                }
+                throw new ArgumentException($"Parameters {String.Join("; ", parametersWithSameName)} has same name as some local variables.");
             }
 
-            var lambdaVisitor = new KSharpVisitor(evaluator, localVariables, parameterNames, arguments, Token);
+            var lambdaVisitor = new KSharpVisitor(evaluator, localVariables, parameterNames, parameters, Token);
             var result = lambdaVisitor.VisitLambda_body(lambdaBodyContext) as Tuple<IDictionary<string, object>, object>;
 
             // update variables which were changed within lambda
@@ -180,9 +179,13 @@ namespace KSharp
         /// <param name="values">Values of the local variables</param>
         private void InitLocalVariables(string[] variables, object[] values)
         {
-            if (variables.Length != values.Length)
+            if (variables.Length > values.Length)
             {
-                throw new NullReferenceException("Missing method call argument.");
+                throw new InvalidOperationException("At least one value has missing variable to which should assign to.");
+            }
+            else if (variables.Length < values.Length)
+            {
+                throw new InvalidOperationException("At least one variable has missing value.");
             }
 
             for (var i = 0; i < variables.Length; i++)
@@ -637,17 +640,17 @@ namespace KSharp
             {
                 if (variableOriginalValue == null)
                 {
-                    throw new NullReferenceException("Cannot increment undefined value.");
+                    throw new InvalidOperationException($"Cannot apply any operation on variable '{variableName}' without assigned value.");
                 }
 
                 var value = Convert.ToInt32(variableOriginalValue);
                 if (context.INC() != null)
                 {
-                    value++;
+                    ++value;
                 }
                 else
                 {
-                    value--;
+                    --value;
                 }
 
                 SetVariable(variableName, value);
@@ -665,6 +668,12 @@ namespace KSharp
             var assignableValue = VisitAssignable_expression(assignableContext);
 
             var operationType = this.MatchAssignmentOperator(context.assignment_operator());
+
+            if ((operationType != OperatorTypeEnum.ASSIGN) && (variableOriginalValue == null))
+            {
+                throw new InvalidOperationException($"Cannot apply any operation on variable '{variableName}' without assigned value.");
+            }
+
             switch (operationType)
             {
                 case OperatorTypeEnum.PLUS_ASSIGN:
