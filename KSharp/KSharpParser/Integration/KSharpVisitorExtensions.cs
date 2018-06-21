@@ -7,7 +7,6 @@ namespace KSharp
     /// </summary>
     public static class KSharpVisitorExtensions
     {
-
         /// <summary>
         /// Matches assignment operators to <see cref="OperatorTypeEnum"/>.
         /// </summary>

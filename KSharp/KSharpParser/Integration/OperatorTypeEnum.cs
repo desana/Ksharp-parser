@@ -6,8 +6,6 @@ namespace KSharp
     /// </summary>
     public enum OperatorTypeEnum
     {
-        #region "Assignment operators"
-
         /// <summary>
         /// Represents '=' operator.
         /// </summary>
@@ -73,10 +71,6 @@ namespace KSharp
         /// </summary>
         RIGHT_SHIFT_ASSIGN,
 
-        #endregion
-
-
-        #region "Unary operators"
 
         /// <summary>
         /// Represents '+' operator.
@@ -95,7 +89,6 @@ namespace KSharp
         /// </summary>
         BANG,
 
-        #endregion        
 
         /// <summary>
         /// Represents default value, when none of the operators is matched.
