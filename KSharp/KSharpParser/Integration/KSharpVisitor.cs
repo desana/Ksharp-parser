@@ -238,12 +238,7 @@ namespace KSharpParser
         /// </summary>
         private bool IsIdentifier(object item)
         {
-            if (!(item is string) || (item as string).Contains("\""))
-            {
-                return false;
-            }
-
-            return true;
+            return (item is string itemString) && !itemString.Contains("\"");
         }
 
 
