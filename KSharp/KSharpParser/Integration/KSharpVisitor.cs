@@ -250,7 +250,7 @@ namespace KSharpParser
                 return InvokeLambdaExpression(lambdaContext as Lambda_expressionContext, arguments as object[]);
             }
 
-            return evaluator.InvokeMethod(methodName as string, arguments);
+            return evaluator.InvokeMethod(methodName, arguments);
         }
 
 
