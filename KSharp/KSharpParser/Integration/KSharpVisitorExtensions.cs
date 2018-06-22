@@ -5,7 +5,7 @@ namespace KSharp
     /// <summary>
     /// Extensions methods for matching operators to <see cref="OperatorTypeEnum"/>.
     /// </summary>
-    public static class KSharpVisitorExtensions
+    internal static class KSharpVisitorExtensions
     {
         /// <summary>
         /// Matches assignment operators to <see cref="OperatorTypeEnum"/>.

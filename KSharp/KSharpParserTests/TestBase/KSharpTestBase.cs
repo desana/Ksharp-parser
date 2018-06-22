@@ -14,10 +14,10 @@ namespace KSharpParserTests
 {
     public class KSharpTestBase
     {
-        public KSharpVisitor Visitor { get; private set; }
+        internal KSharpVisitor Visitor { get; private set; }
 
 
-        public Mock<INodeEvaluator> EvaluatorMock { get; private set; }
+        internal Mock<INodeEvaluator> EvaluatorMock { get; private set; }
         
 
         private string consoleOutput;

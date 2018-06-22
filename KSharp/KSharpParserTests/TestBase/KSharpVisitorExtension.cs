@@ -6,7 +6,7 @@ using static KSharpParser.KSharpGrammarParser;
 
 namespace KSharpParserTests
 {
-    public static class KSharpVisitorExtension
+    internal static class KSharpVisitorExtension
     {
 
         public static object GetFirstResult(this KSharpVisitor visitor, Begin_expressionContext tree)
