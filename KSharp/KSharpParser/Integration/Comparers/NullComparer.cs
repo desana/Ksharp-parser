@@ -1,6 +1,4 @@
-﻿using KSharp;
-
-namespace KSharpParser.Integration
+﻿namespace KSharpParser
 {
     /// <summary>
     /// Returns 0 if both operands are <c>null</c>, 1 otherwise.

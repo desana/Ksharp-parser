@@ -1,5 +1,5 @@
 ﻿
-namespace KSharp
+namespace KSharpParser
 {
     /// <summary>
     /// Enum representing unary and assignment operators.

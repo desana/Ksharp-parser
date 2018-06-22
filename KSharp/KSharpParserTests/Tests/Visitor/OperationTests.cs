@@ -2,7 +2,7 @@
 
 using System;
 
-namespace KSharpParserTests.Visitor
+namespace KSharpParser.Tests
 {
     class OperationTests
     {

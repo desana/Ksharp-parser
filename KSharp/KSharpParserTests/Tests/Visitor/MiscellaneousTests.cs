@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace KSharpParserTests
+namespace KSharpParser.Tests
 {
     class MiscellaneousTests
     {                

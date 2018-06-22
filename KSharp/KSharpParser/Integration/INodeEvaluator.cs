@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace KSharp
+namespace KSharpParser
 {
     /// <summary>
     /// Defines methods which need to be evaluated with the system context.
@@ -28,7 +28,7 @@ namespace KSharp
 
 
         /// <summary>
-        /// Obtains value from the system (sytem variables, settings, database items)...
+        /// Obtains value from the system (system variables, settings, database items)...
         /// </summary>
         /// <param name="variableName">Name of the variable.</param>
         /// <returns>Value of a system variable.</returns>

@@ -1,10 +1,8 @@
-﻿using Antlr4.Runtime;
-
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 using System;
 
-namespace KSharpParserTests.Visitor
+namespace KSharpParser.Tests
 {
     class DataTypeTests
     {

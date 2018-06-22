@@ -1,10 +1,8 @@
-﻿using KSharp;
-
-using System.Collections;
+﻿using System.Collections;
 
 using static KSharpParser.KSharpGrammarParser;
 
-namespace KSharpParserTests
+namespace KSharpParser.Tests
 {
     internal static class KSharpVisitorExtension
     {

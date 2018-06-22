@@ -1,6 +1,6 @@
 ﻿using static KSharpParser.KSharpGrammarParser;
 
-namespace KSharp
+namespace KSharpParser
 {
     /// <summary>
     /// Extensions methods for matching operators to <see cref="OperatorTypeEnum"/>.

@@ -4,21 +4,19 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading;
+
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using Antlr4.Runtime.Tree;
 
-using KSharpParser;
-using KSharpParser.Integration;
-
 using static KSharpParser.KSharpGrammarParser;
 
-namespace KSharp
+namespace KSharpParser
 {
     /// <summary>
     /// Provides evaluation of the macro expression. Implements <see cref="KSharpGrammarBaseVisitor{Result}"/>.
     /// </summary>
-    public class KSharpVisitor : KSharpGrammarBaseVisitor<object>
+    internal class KSharpVisitor : KSharpGrammarBaseVisitor<object>
     {
         private readonly INodeEvaluator evaluator;
 

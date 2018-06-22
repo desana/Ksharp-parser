@@ -1,7 +1,6 @@
-﻿
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace KSharpParserTests
+namespace KSharpParser.Tests
 {
     [TestFixture]
     public class LambdaTests : KSharpTestBase

@@ -1,8 +1,9 @@
-﻿using Antlr4.Runtime;
-using NUnit.Framework;
-using System;
+﻿using System;
 
-namespace KSharpParserTests.Visitor
+using Antlr4.Runtime;
+using NUnit.Framework;
+
+namespace KSharpParser.Tests
 {
     class AssignmentTests 
     {

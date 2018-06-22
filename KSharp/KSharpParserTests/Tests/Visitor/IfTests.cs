@@ -3,7 +3,7 @@ using NUnit.Framework;
 
 using System;
 
-namespace KSharpParserTests
+namespace KSharpParser.Tests
 {
     [TestFixture]
     public class IfTests : KSharpTestBase
