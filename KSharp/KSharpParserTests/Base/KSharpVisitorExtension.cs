@@ -1,12 +1,10 @@
-﻿using KSharp;
-
-using System.Collections;
+﻿using System.Collections;
 
 using static KSharpParser.KSharpGrammarParser;
 
-namespace KSharpParserTests
+namespace KSharpParser.Tests
 {
-    public static class KSharpVisitorExtension
+    internal static class KSharpVisitorExtension
     {
 
         public static object GetFirstResult(this KSharpVisitor visitor, Begin_expressionContext tree)

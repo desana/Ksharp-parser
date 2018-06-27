@@ -1,23 +1,21 @@
-﻿using Antlr4.Runtime;
-
-using KSharp;
-using KSharpParser;
-using Moq;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 
-namespace KSharpParserTests
+using Antlr4.Runtime;
+using Moq;
+using NUnit.Framework;
+
+namespace KSharpParser.Tests
 {
     public class KSharpTestBase
     {
-        public KSharpVisitor Visitor { get; private set; }
+        internal KSharpVisitor Visitor { get; private set; }
 
 
-        public Mock<INodeEvaluator> EvaluatorMock { get; private set; }
+        internal Mock<INodeEvaluator> EvaluatorMock { get; private set; }
         
 
         private string consoleOutput;

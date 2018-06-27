@@ -1,8 +1,9 @@
-﻿using Antlr4.Runtime;
-using NUnit.Framework;
-using System;
+﻿using System;
 
-namespace KSharpParserTests.Visitor
+using Antlr4.Runtime;
+using NUnit.Framework;
+
+namespace KSharpParser.Tests
 {
     class AssignmentTests 
     {
@@ -65,13 +66,25 @@ namespace KSharpParserTests.Visitor
                 Assert.AreEqual(expected, Visitor.GetFirstResult(tree));
             }
 
-            [TestCase("Variable += 2;")]
+
             [TestCase("Variable++;")]
-            public void AdvancedAssignment_NotSuccessful_ThrowsNullReference(string input)
+            [TestCase("++Variable;")]
+            [TestCase("Variable +=2;")]
+            [TestCase("Variable -=2;")]
+            [TestCase("Variable /=2;")]
+            [TestCase("Variable *=2;")]
+            [TestCase("Variable %=2;")]
+            [TestCase("Variable &=2;")]
+            [TestCase("Variable |=2;")]
+            [TestCase("Variable ^=2;")]
+            [TestCase("Variable <<= 2;")]
+            [TestCase("Variable >>= 2;")]
+            
+            public void AdvancedAssignment_NotSuccessful_ThrowsInvalidOperationException(string input)
             {
                 var tree = GetParser(input).begin_expression();
 
-                Assert.Throws<NullReferenceException>(() => Visitor.GetFirstResult(tree));
+                Assert.Throws<InvalidOperationException>(() => Visitor.GetFirstResult(tree));
             }
         }
     }

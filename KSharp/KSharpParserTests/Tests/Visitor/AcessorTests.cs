@@ -4,9 +4,9 @@ using NUnit.Framework;
 using System;
 using System.Globalization;
 
-namespace KSharpParserTests
+namespace KSharpParser.Tests
 {
-    public class AcessorTests
+    public class AssessorTests
     {
         [TestFixture]
         public class IndexerTests : KSharpTestBase

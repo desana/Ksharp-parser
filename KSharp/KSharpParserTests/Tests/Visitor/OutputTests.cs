@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace KSharpParserTests.Visitor
+namespace KSharpParser.Tests
 {
     class OutputTests
     {

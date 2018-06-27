@@ -1,11 +1,8 @@
 ﻿using Antlr4.Runtime;
-
-using KSharpParser;
-
 using NUnit.Framework;
 
-namespace KSharpParserTests
-{    
+namespace KSharpParser.Tests
+{
     public class KSharprTests
     {
         #region "Helper methods"
